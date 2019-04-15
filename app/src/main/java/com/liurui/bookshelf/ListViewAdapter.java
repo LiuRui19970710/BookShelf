@@ -27,6 +27,9 @@ public class ListViewAdapter extends BaseAdapter {
         this.itemViews = itemViews;
     }
 
+    public void delAll(){
+        itemViews.clear();
+    }
     public int getCount() {
         return itemViews.size();
     }
@@ -57,7 +60,7 @@ public class ListViewAdapter extends BaseAdapter {
         } else
             viewHolder = (ViewHolder) convertView.getTag();
 
-//        viewHolder.BookCover.setImageResource();
+        viewHolder.BookCover.setImageResource(R.drawable.bookcover);
         viewHolder.BookName.setText(book.getName());
         viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house());
         return convertView;

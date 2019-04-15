@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listViewAdapter = new ListViewAdapter(MainActivity.this,itemViews);
         listView.setAdapter(listViewAdapter);
         Initialize();
+
     }
 
     @Override
@@ -85,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String content=data.getStringExtra(Constant.CODED_CONTENT);
                         AddBook addBook = new AddBook();
                         itemViews.add(addBook.add_book(content));
-                        bookCollection.save(MainActivity.this.getBaseContext(),itemViews);
-                        itemViews = bookCollection.read(getBaseContext());
                         listViewAdapter.notifyDataSetChanged();
                     }
                 }
@@ -120,9 +119,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             BookSort bs=new BookSort();
-            Log.d("fuck",itemViews.get(0).getName());
-            itemViews=bs.sort(itemViews);
-            Log.d("fuck",itemViews.get(0).getName());
+            ArrayList sendList = new ArrayList();
+            sendList.addAll(itemViews);
+            ArrayList tmpList = bs.sort(sendList);
+
+            listViewAdapter.delAll();
+            itemViews.addAll(tmpList);
             listViewAdapter.notifyDataSetChanged();
             return true;
         }
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        Book book = new Book();
+        /*Book book = new Book();
         book.setName("3");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
@@ -170,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
-        bookCollection.save(MainActivity.this.getBaseContext(),itemViews);
+        bookCollection.save(MainActivity.this.getBaseContext(),itemViews);*/
 
-        itemViews = bookCollection.read(getBaseContext());
-
+        ArrayList<Book> tmpList = bookCollection.read(getBaseContext());
+        itemViews.addAll(tmpList);
         listViewAdapter.notifyDataSetChanged();     //不用这一句也能正常运行，可删
     }
 }
