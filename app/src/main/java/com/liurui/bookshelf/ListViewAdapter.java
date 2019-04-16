@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by szekinfung on 2019/4/13.
+ * Update by LiuRui on 2019/4/16
  */
 
 public class ListViewAdapter extends BaseAdapter {
@@ -62,7 +63,7 @@ public class ListViewAdapter extends BaseAdapter {
 
         viewHolder.BookCover.setImageResource(R.drawable.bookcover);
         viewHolder.BookName.setText(book.getName());
-        viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house());
+        viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house()+"    "+book.getPublishing_time());
         return convertView;
     }
 }

@@ -6,4 +6,19 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/sort_author"
+        android:orderInCategory="100"
+        android:title="@string/sort_author_string"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sort_publish"
+        android:orderInCategory="100"
+        android:title="@string/sort_publish_string"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sort_time"
+        android:orderInCategory="100"
+        android:title="@string/sort_time_string"
+        app:showAsAction="never" />
 </menu>

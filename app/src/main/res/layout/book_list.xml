@@ -30,8 +30,6 @@
         android:layout_height="37.5dp"
         android:id="@+id/BookAuthor" />
 
-
-
     </LinearLayout>
 
 </LinearLayout>

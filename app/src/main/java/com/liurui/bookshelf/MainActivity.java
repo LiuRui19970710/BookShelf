@@ -10,12 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
@@ -117,19 +116,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            BookSort bs=new BookSort();
-            ArrayList sendList = new ArrayList();
-            sendList.addAll(itemViews);
-            ArrayList tmpList = bs.sort(sendList);
-
-            listViewAdapter.delAll();
-            itemViews.addAll(tmpList);
-            listViewAdapter.notifyDataSetChanged();
-            return true;
+        BookSort bs=new BookSort();
+        ArrayList sendList = new ArrayList();
+        sendList.addAll(itemViews);
+        ArrayList tmpList;
+        if (id == R.id.action_settings)
+        {
+            tmpList = bs.sort_by_title(sendList);
         }
-
-        return super.onOptionsItemSelected(item);
+        else if(id==R.id.sort_author)
+        {
+            tmpList = bs.sort_by_author(sendList);
+        }
+        else if(id==R.id.sort_publish)
+        {
+            tmpList = bs.sort_by_publish(sendList);
+        }
+        else if(id==R.id.sort_time)
+        {
+            tmpList = bs.sort_by_time(sendList);
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+        listViewAdapter.delAll();
+        itemViews.addAll(tmpList);
+        listViewAdapter.notifyDataSetChanged();
+        return true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
