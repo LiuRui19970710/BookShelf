@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BookCollection bookCollection = new BookCollection();
     ListView listView;
     ListViewAdapter listViewAdapter;
-
+    LeftListItem leftlistitem=new LeftListItem();
 
     // private FloatingActionButton addone;
    // private FloatingActionButton addmany;
@@ -158,11 +158,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.add_labal) {
 
         } else if (id == R.id.donate) {
-
+            leftlistitem.donate(MainActivity.this);
         } else if (id == R.id.setting) {
-
+            Intent intent=new Intent(MainActivity.this,Set.class);
+            startActivity(intent);
         } else if (id == R.id.about) {
-
+            Intent intent=new Intent(MainActivity.this,About.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
