@@ -11,8 +11,7 @@
         android:layout_height="55dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/bookcover"/>
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

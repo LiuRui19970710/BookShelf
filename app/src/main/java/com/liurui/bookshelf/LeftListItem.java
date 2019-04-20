@@ -5,7 +5,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class LeftListItem {
+    public ArrayList<Book> LeftListSearch(ArrayList<Book> all_bookL_ist, String searchStr){
+        Book temp;
+        ArrayList<Book> res_List = new ArrayList<>();
+        for(int i=0;i<all_bookL_ist.size();i++){
+            temp = all_bookL_ist.get(i);
+            if(temp.getName().contains(searchStr))
+                res_List.add(temp);
+        }
+        return res_List;
+    }
+
+
     public void donate(final Context context){
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
         builder.setTitle("捐赠");
