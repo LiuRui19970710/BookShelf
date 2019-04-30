@@ -16,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView listView;
     ListViewAdapter listViewAdapter;
     LeftListItem leftlistitem=new LeftListItem();
+    SearchView searchView;
+    ArrayList<String> spinner_list = new ArrayList<>();
 
     // private FloatingActionButton addone;
    // private FloatingActionButton addmany;
@@ -76,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView.setAdapter(listViewAdapter);
         Initialize();
 
+        spinner_list.add("所有");
+        spinner_list.add("默认书架");
+        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
+        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+
+        Spinner spinner = super.findViewById(R.id.spinner);
+        spinner.setAdapter(spinner_adapter);
+
     }
 
     @Override
@@ -108,10 +120,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new MyQueryTextListener());
 
         return true;
@@ -163,8 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.booklist) {
             // Handle the camera action
         } else if (id == R.id.search) {
-            SearchView searchView = (SearchView)findViewById(R.id.action_search);
-            searchView.onActionViewExpanded();
+            searchView.setIconified(false);
             searchView.setOnQueryTextListener(new MyQueryTextListener());
 
         } else if (id == R.id.add_labal) {

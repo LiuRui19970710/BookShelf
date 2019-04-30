@@ -6,7 +6,7 @@
         android:id="@+id/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="搜索"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
