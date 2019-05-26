@@ -12,10 +12,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Spinner spinner = super.findViewById(R.id.spinner);
         spinner.setAdapter(spinner_adapter);
 
+        registerForContextMenu(listView);  //important!注册上下文菜单
     }
 
     @Override
@@ -242,4 +245,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         itemViews.addAll(tmpList);
         listViewAdapter.notifyDataSetChanged();     //不用这一句也能正常运行，可删
     }
+
+    /** Guo: 长按书本删除 **/
+    //创建上下文菜单
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, Menu.FIRST, 0, "删除");  //创建上下文菜单里的选项
+    }
+
+    //定义每个选项所要运行的操作
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case Menu.FIRST:
+                //删除指定列表条目
+                AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                int position = menuInfo.position;
+                itemViews.remove(position);
+                break;
+        }
+        listViewAdapter.notifyDataSetChanged();
+        return true;
+    }
+    /** Guo: 长按书本删除 **/
 }
