@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -81,6 +82,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listViewAdapter = new ListViewAdapter(MainActivity.this,itemViews);
         listView.setAdapter(listViewAdapter);
         Initialize();
+        //listview的点击事件跳转
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent();
+                intent.setClass(MainActivity.this,Book_Detail_info_Activity.class);
+                Bundle bundle =new Bundle();
+                bundle.putSerializable("book",itemViews.get(i));
+                intent.putExtra("index",i);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         spinner_list.add("所有");
         spinner_list.add("默认书架");
@@ -268,4 +282,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
     /** Guo: 长按书本删除 **/
+
+    //返回书本数组的引用
+    public ArrayList<Book> getItemViews(){
+        return itemViews;
+    }
 }
