@@ -11,7 +11,6 @@ public class AddBook {
     Context context;
     private int sid;
     Collection collection_sid = new Collection("SID");
-    ArrayList<Integer> one_int = new ArrayList<>();
 
     public AddBook(Context context){
         this.context = context;
