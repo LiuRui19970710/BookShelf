@@ -16,6 +16,9 @@ public class Book implements Serializable {
     private String item_website;
     private int pictureid;
 
+    private boolean isShow = false;
+    private boolean isChecked = false;
+
     public int getId() {
         return id;
     }
@@ -109,5 +112,21 @@ public class Book implements Serializable {
 
     public void setPublishing_time(String publishing_time) {
         this.publishing_time = publishing_time;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }
