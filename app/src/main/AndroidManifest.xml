@@ -33,6 +33,7 @@
             android:name=".About">
         </activity>
         <activity android:name=".Set"></activity>
+        <activity android:name=".EditBookActivity"></activity>
     </application>
 
 </manifest>

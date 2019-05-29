@@ -9,11 +9,12 @@ public class Book implements Serializable {
     private String publishing_house;
     private String publishing_time;
     private String isbn;
-    private String reading_status;
+    private int reading_status;
     private String item_bookshelf;
     private String item_notes;
     private String item_labels;
     private String item_website;
+    private int pictureid;
 
     public int getId() {
         return id;
@@ -45,14 +46,6 @@ public class Book implements Serializable {
 
     public void setPublishing_house(String publishing_house) {
         this.publishing_house = publishing_house;
-    }
-
-    public String getPublishing_time() {
-        return publishing_time;
-    }
-
-    public void setPublishing_time(String publishing_time) {
-        this.publishing_time = publishing_time;
     }
 
     public String getIsbn() {
@@ -94,11 +87,27 @@ public class Book implements Serializable {
         this.item_website = item_website;
     }
 
-    public String getReading_status() {
+    public int getReading_status() {
         return reading_status;
     }
 
-    public void setReading_status(String reading_status) {
+    public void setReading_status(int reading_status) {
         this.reading_status = reading_status;
+    }
+
+    public int getPictureid() {
+        return pictureid;
+    }
+
+    public void setPictureid(int pictureid) {
+        this.pictureid = pictureid;
+    }
+
+    public String getPublishing_time() {
+        return publishing_time;
+    }
+
+    public void setPublishing_time(String publishing_time) {
+        this.publishing_time = publishing_time;
     }
 }

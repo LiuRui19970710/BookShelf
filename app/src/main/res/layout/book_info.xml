@@ -31,6 +31,7 @@
             android:gravity="center_vertical"/>
 
         <Button
+            android:id="@+id/edit"
             android:layout_width="50dp"
             android:layout_height="70dp"
             android:layout_alignParentEnd="true"
@@ -326,13 +327,7 @@
                     android:textColor="@color/black"
                     android:textSize="20dp" />
             </RelativeLayout>
-
-
-
         </LinearLayout>
-
         </android.support.v7.widget.CardView>
-
-
     </LinearLayout>
 </ScrollView>

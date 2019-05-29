@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/edit_picture"
+            android:layout_width="120dp"
+            android:layout_height="191dp"
+            android:src="@drawable/book"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="标题:" />
+
+                <EditText
+                    android:id="@+id/edit_bookname"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:maxLength="14"
+                    android:padding="5dp"
+                    android:text="555555" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="作者:" />
+
+                <EditText
+                    android:id="@+id/edit_author"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:maxLength="14"
+                    android:padding="5dp"
+                    android:text="55555555555" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="出版社:" />
+
+                <EditText
+                    android:id="@+id/edit_publisher"
+                    android:layout_width="135dp"
+                    android:layout_height="match_parent"
+                    android:maxLength="14"
+                    android:padding="5dp"
+                    android:text="55555555555" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="出版时间:" />
+
+                <EditText
+                    android:id="@+id/edit_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="4"
+                    android:padding="5dp"
+                    android:text="2019" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:text="—" />
+
+                <EditText
+                    android:id="@+id/edit_moon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="2"
+                    android:padding="5dp"
+                    android:text="01" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="ISBN:" />
+
+                <EditText
+                    android:id="@+id/edit_isbn"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:maxLength="14"
+                    android:padding="5dp"
+                    android:text="55555555555555" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="详情"
+            android:textSize="20dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#ffe0e0e0"></View>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="20dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="book_detail_item_reading_status_image"
+                android:src="@drawable/book_detail_item_reading_status_image" />
+            <Spinner
+                android:id="@+id/edit_readstatue"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/readstatue"
+                >
+            </Spinner>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="book_detail_item_bookshelf_image"
+                android:src="@drawable/book_detail_item_bookshelf_image" />
+            <Spinner
+                android:id="@+id/edit_bookshelf"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                >
+            </Spinner>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="book_detail_item_notes_image"
+                android:src="@drawable/book_detail_item_notes_image" />
+            <EditText
+                android:id="@+id/edit_notes"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="book_detail_item_labels_image"
+                android:src="@drawable/book_detail_item_labels_image" />
+            <EditText
+                android:id="@+id/edit_label"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="book_detail_item_website_image"
+                android:src="@drawable/book_detail_item_website_image" />
+            <EditText
+                android:id="@+id/edit_weburl"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
