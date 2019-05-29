@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Label> labels = new ArrayList<>();
     int label_id=0;
     NavigationView navigationView;
-    BookCollection bookCollection = new BookCollection();
+    Collection collection_book = new Collection("Book");
+    Collection collection_Label = new Collection("Label");
     ListView listView;
     ListViewAdapter listViewAdapter;
     LeftListItem leftlistitem=new LeftListItem();
@@ -116,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner.setOnItemSelectedListener(new MySpinnerItemSelectedListener());
 
         //设置左侧列表
-        //labels=labelCollection.read(getBaseContext());            //待重构
+        ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
+        labels.addAll(tmpLabels);
         Set_Left_Menu();
 
         registerForContextMenu(listView);  //important!注册上下文菜单
@@ -258,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Label label = new Label();
                         label.setLabel(label_input.getText().toString());
                         labels.add(label);
-                        //labelCollection.save(MainActivity.this.getBaseContext(), labels);     //待重构
+                        collection_Label.save(MainActivity.this.getBaseContext(), labels);     //待重构
                         label_id++;
                         navigationView.getMenu().removeGroup(0);
                         navigationView.getMenu().removeGroup(1);
@@ -363,9 +365,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
-        bookCollection.save(MainActivity.this.getBaseContext(),itemViews);
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
-        ArrayList<Book> tmpList = bookCollection.read(getBaseContext());
+        ArrayList<Book> tmpList = collection_book.read(getBaseContext());
         itemViews.addAll(tmpList);
         listViewAdapter.notifyDataSetChanged();     //不用这一句也能正常运行，可删
     }
