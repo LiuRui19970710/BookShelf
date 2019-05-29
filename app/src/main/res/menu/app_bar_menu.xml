@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+<!--    <item android:id="@+id/AddLabel"
+        android:title="添加书签"
+        />
+    <item android:id="@+id/RemoveBookshelf"
+        android:title="移动书架"
+        />
+    -->
+
+ <!--   <item
+        android:id="@+id/returnback"
+        android:icon="@drawable/returnback"
+        android:orderInCategory="70"
+        app:showAsAction="always" />
+        -->
+    <item
+        android:id="@+id/selectall"
+        android:icon="@drawable/selectall"
+        android:orderInCategory="80"
+        android:title="全选"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/delete"
+        android:orderInCategory="90"
+        android:title="删除"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/add_label"
+        android:orderInCategory="100"
+        android:title="添加书签"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/remove_bookshelf"
+        android:orderInCategory="100"
+        android:title="移动书架"
+        app:showAsAction="ifRoom"/>
+
+
+
+
+</menu>
