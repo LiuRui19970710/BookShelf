@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (resultCode==RESULT_OK){
                     if (data!=null){
                         String content=data.getStringExtra(Constant.CODED_CONTENT);
-                        AddBook addBook = new AddBook();
+                        AddBook addBook = new AddBook(getBaseContext());
                         itemViews.add(addBook.add_book(content));
                         listViewAdapter.notifyDataSetChanged();
                     }
