@@ -1,5 +1,6 @@
 package com.liurui.bookshelf;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,18 +10,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -32,6 +39,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ArrayList<Book> itemViews = new ArrayList<>();
+    private ArrayList<Label> labels = new ArrayList<>();
+    int label_id=0;
+    NavigationView navigationView;
     BookCollection bookCollection = new BookCollection();
     ListView listView;
     ListViewAdapter listViewAdapter;
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -104,6 +114,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner = super.findViewById(R.id.spinner);
         spinner.setAdapter(spinner_adapter);
         spinner.setOnItemSelectedListener(new MySpinnerItemSelectedListener());
+
+        //设置左侧列表
+        //labels=labelCollection.read(getBaseContext());            //待重构
+        Set_Left_Menu();
 
         registerForContextMenu(listView);  //important!注册上下文菜单
     }
@@ -197,26 +211,82 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.booklist) {
+        if (id == 0) {
             // Handle the camera action
-        } else if (id == R.id.search) {
+        } else if (id == 1) {
             searchView.setIconified(false);
             searchView.setOnQueryTextListener(new MyQueryTextListener());
 
-        } else if (id == R.id.add_labal) {
+        } else if (id == 2) {
+            final EditText label_input;
+            final TextView label_length;
+            LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+            final View v = inflater.inflate(R.layout.label_input_window,null, false);
+            label_length = v.findViewById(R.id.label_length);
+            label_input = v.findViewById(R.id.label_input);
+            label_input.addTextChangedListener(new TextWatcher() {
 
-        } else if (id == R.id.donate) {
+                int current_Length = 0;
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (current_Length < 15) {
+                        current_Length = label_input.getText().length();
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    label_length.setText(current_Length + "/15");
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    label_length.setText(current_Length + "/15");
+                }
+            });
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("标签名称");
+            builder.setView(v);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Toast.makeText(MainActivity.this,label_input.getText(),Toast.LENGTH_LONG).show();
+                    if(label_input.getText().length()!=0) {
+                        Label label = new Label();
+                        label.setLabel(label_input.getText().toString());
+                        labels.add(label);
+                        //labelCollection.save(MainActivity.this.getBaseContext(), labels);     //待重构
+                        label_id++;
+                        navigationView.getMenu().removeGroup(0);
+                        navigationView.getMenu().removeGroup(1);
+                        navigationView.getMenu().removeGroup(2);
+                        Set_Left_Menu();
+                    }
+                }
+
+            });
+
+            builder.setNegativeButton("取消", null);
+            builder.show();
+
+        } else if (id == 3) {
             leftlistitem.donate(MainActivity.this);
-        } else if (id == R.id.setting) {
-            Intent intent=new Intent(MainActivity.this,Set.class);
+        } else if (id == 4) {
+            Intent intent = new Intent(MainActivity.this, Set.class);
             startActivity(intent);
-        } else if (id == R.id.about) {
-            Intent intent=new Intent(MainActivity.this,About.class);
+        } else if (id == 5) {
+            Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
+        }else if(id>=6&&id<=1000) {
+            Toast.makeText(MainActivity.this,"此处准备写个跳转函数",Toast.LENGTH_LONG).show();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+
         return true;
     }
 
@@ -256,7 +326,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Author：Liurui
+     * 设置左侧列表
+     */
+    public void Set_Left_Menu()
+    {
+        navigationView.getMenu().add(0,0,0,"书籍").setIcon(R.drawable.book_list);
+        navigationView.getMenu().add(0,1,0,"搜索").setIcon(R.drawable.search);
 
+
+        for(label_id=0;label_id<labels.size();label_id++)
+        {
+            navigationView.getMenu().add(1,label_id+6,0,labels.get(label_id).getLabel());
+        }
+        navigationView.getMenu().add(1,2,0,"添加新标签").setIcon(R.drawable.add);
+        navigationView.getMenu().add(2,3,0,"捐赠").setIcon(R.drawable.donate);
+        navigationView.getMenu().add(2,4,0,"设置").setIcon(R.drawable.setting);
+        navigationView.getMenu().add(2,5,0,"关于").setIcon(R.drawable.about);
+
+
+    }
 
     public void Initialize(){
         Book book = new Book();
