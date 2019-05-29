@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListViewAdapter listViewAdapter;
     LeftListItem leftlistitem=new LeftListItem();
     SearchView searchView;
+    Spinner spinner;
     ArrayList<String> spinner_list = new ArrayList<>();
 
     // private FloatingActionButton addone;
@@ -100,9 +101,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner_list.add("默认书架");
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
-
-        Spinner spinner = super.findViewById(R.id.spinner);
+        spinner = super.findViewById(R.id.spinner);
         spinner.setAdapter(spinner_adapter);
+        spinner.setOnItemSelectedListener(new MySpinnerItemSelectedListener());
 
         registerForContextMenu(listView);  //important!注册上下文菜单
     }
@@ -237,6 +238,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         }
     }
+
+    /**
+     * Author:SZEKIN
+     * Spinner的点击事件
+     */
+    class MySpinnerItemSelectedListener implements AdapterView.OnItemSelectedListener{
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view,int position, long id){
+            String bookshelf_selected = (String)spinner.getItemAtPosition(position);      //从spinner中获取被选择的数据
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            // TODO Auto-generated method stub
+        }
+    }
+
+
 
     public void Initialize(){
         Book book = new Book();
