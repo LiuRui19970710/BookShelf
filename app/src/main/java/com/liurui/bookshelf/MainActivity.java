@@ -152,9 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setDelete();
     }
 
-    /**
-     * author: guo
-     */
     private TextView deleteNum;
 
     private void setDelete() {
@@ -473,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        Book book = new Book();
+        /*Book book = new Book();
         book.setName("3");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
@@ -492,13 +489,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
-        itemViews.add(book);
+        itemViews.add(book);*/
 
-        //collection_book.save(MainActivity.this.getBaseContext(),itemViews);
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
-        //ArrayList<Book> tmpList = collection_book.read(getBaseContext());
-        //itemViews.addAll(tmpList);
+        ArrayList<Book> tmpList = collection_book.read(getBaseContext());
+        itemViews.addAll(tmpList);
 
         //添加标签
         ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
@@ -508,29 +505,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
         shelfs.addAll(tmpShelf);
     }
-
-    /** Guo: 长按书本删除 **/
-    //创建上下文菜单
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, Menu.FIRST, 0, "删除");  //创建上下文菜单里的选项
-    }
-
-    //定义每个选项所要运行的操作
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case Menu.FIRST:
-                //删除指定列表条目
-                AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                int position = menuInfo.position;
-                itemViews.remove(position);
-                break;
-        }
-        listViewAdapter.notifyDataSetChanged();
-        return true;
-    }
-    /** Guo: 长按书本删除 **/
 
     //返回书本数组的引用
     public ArrayList<Book> getItemViews(){
