@@ -8,80 +8,75 @@ import java.util.ArrayList;
 
 public class BookSort {
 
-    public ArrayList<Book> sort_by_title( ArrayList<Book> itemView)
+    public void sort_by_title( )
     {
         Book temp;
 
-        for(int i=0;i<itemView.size();i++)
+        for(int i=0;i<MainActivity.itemViews.size();i++)
         {
-            for(int j=i;j<itemView.size();j++)
+            for(int j=i;j<MainActivity.itemViews.size();j++)
             {
-                    if (itemView.get(i).getName().compareTo(itemView.get(j).getName()) > 0) {
-                        temp = itemView.get(i);
-                        itemView.set(i, itemView.get(j));
-                        itemView.set(j, temp);
+                    if (MainActivity.itemViews.get(i).getName().compareTo(MainActivity.itemViews.get(j).getName()) > 0) {
+                        temp = MainActivity.itemViews.get(i);
+                        MainActivity.itemViews.set(i, MainActivity.itemViews.get(j));
+                        MainActivity.itemViews.set(j, temp);
 
                 }
             }
         }
 
-        return itemView;
     }
-    public ArrayList<Book> sort_by_author( ArrayList<Book> itemView)
+    public void sort_by_author( )
     {
         Book temp;
 
-        for(int i=0;i<itemView.size();i++)
+        for(int i=0;i<MainActivity.itemViews.size();i++)
         {
-            for(int j=i;j<itemView.size();j++)
+            for(int j=i;j<MainActivity.itemViews.size();j++)
             {
-                if (itemView.get(i).getAuthor().compareTo(itemView.get(j).getAuthor()) > 0) {
-                    temp = itemView.get(i);
-                    itemView.set(i, itemView.get(j));
-                    itemView.set(j, temp);
+                if (MainActivity.itemViews.get(i).getAuthor().compareTo(MainActivity.itemViews.get(j).getAuthor()) > 0) {
+                    temp = MainActivity.itemViews.get(i);
+                    MainActivity.itemViews.set(i, MainActivity.itemViews.get(j));
+                    MainActivity.itemViews.set(j, temp);
 
                 }
             }
         }
 
-        return itemView;
     }
-    public ArrayList<Book> sort_by_publish( ArrayList<Book> itemView)
+    public void sort_by_publish( )
     {
         Book temp;
 
-        for(int i=0;i<itemView.size();i++)
+        for(int i=0;i<MainActivity.itemViews.size();i++)
         {
-            for(int j=i;j<itemView.size();j++)
+            for(int j=i;j<MainActivity.itemViews.size();j++)
             {
-                if (itemView.get(i).getPublishing_house().compareTo(itemView.get(j).getPublishing_house()) > 0) {
-                    temp = itemView.get(i);
-                    itemView.set(i, itemView.get(j));
-                    itemView.set(j, temp);
+                if (MainActivity.itemViews.get(i).getPublishing_house().compareTo(MainActivity.itemViews.get(j).getPublishing_house()) > 0) {
+                    temp = MainActivity.itemViews.get(i);
+                    MainActivity.itemViews.set(i, MainActivity.itemViews.get(j));
+                    MainActivity.itemViews.set(j, temp);
 
                 }
             }
         }
-
-        return itemView;
     }
-    public ArrayList<Book> sort_by_time( ArrayList<Book> itemView)
+    public void sort_by_time( )
     {
         Book temp;
 
-        for(int i=0;i<itemView.size();i++)
+        for(int i=0;i<MainActivity.itemViews.size();i++)
         {
-            for(int j=i;j<itemView.size();j++)
+            for(int j=i;j<MainActivity.itemViews.size();j++)
             {
-                if (itemView.get(i).getPublishing_time().compareTo(itemView.get(j).getPublishing_time()) > 0) {
-                    temp = itemView.get(i);
-                    itemView.set(i, itemView.get(j));
-                    itemView.set(j, temp);
+                if (MainActivity.itemViews.get(i).getPublishing_time().compareTo(MainActivity.itemViews.get(j).getPublishing_time()) > 0) {
+                    temp = MainActivity.itemViews.get(i);
+                    MainActivity.itemViews.set(i, MainActivity.itemViews.get(j));
+                    MainActivity.itemViews.set(j, temp);
 
                 }
             }
         }
 
-        return itemView;
     }
 }

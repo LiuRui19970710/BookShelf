@@ -38,12 +38,14 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private ArrayList<Book> itemViews = new ArrayList<>();
+    public static ArrayList<Book> itemViews = new ArrayList<>();
     private ArrayList<Label> labels = new ArrayList<>();
+    private ArrayList<Shelf> shelfs = new ArrayList<>();
     int label_id=0;
     NavigationView navigationView;
     Collection collection_book = new Collection("Book");
     Collection collection_Label = new Collection("Label");
+    Collection collection_Shelf = new Collection("Shelf");
     ListView listView;
     ListViewAdapter listViewAdapter;
     LeftListItem leftlistitem=new LeftListItem();
@@ -93,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView = (ListView)findViewById(R.id.BookList);
         listViewAdapter = new ListViewAdapter(MainActivity.this,itemViews);
         listView.setAdapter(listViewAdapter);
+
         Initialize();
+
         //listview的点击事件跳转
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,8 +112,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
+
         spinner_list.add("所有");
         spinner_list.add("默认书架");
+        for(int index=0;index<shelfs.size();index++){
+            spinner_list.add(shelfs.get(index).getShelf());
+        }
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
         spinner = super.findViewById(R.id.spinner);
@@ -117,8 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner.setOnItemSelectedListener(new MySpinnerItemSelectedListener());
 
         //设置左侧列表
-        ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
-        labels.addAll(tmpLabels);
         Set_Left_Menu();
 
         registerForContextMenu(listView);  //important!注册上下文菜单
@@ -179,30 +186,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         BookSort bs=new BookSort();
-        ArrayList sendList = new ArrayList();
-        sendList.addAll(itemViews);
-        ArrayList tmpList;
         if (id == R.id.action_settings)
         {
-            tmpList = bs.sort_by_title(sendList);
-        }
+            bs.sort_by_title();
+    }
         else if(id==R.id.sort_author)
         {
-            tmpList = bs.sort_by_author(sendList);
+            bs.sort_by_author();
         }
         else if(id==R.id.sort_publish)
         {
-            tmpList = bs.sort_by_publish(sendList);
+            bs.sort_by_publish();
         }
         else if(id==R.id.sort_time)
         {
-            tmpList = bs.sort_by_time(sendList);
+            bs.sort_by_time();
         }
         else {
             return super.onOptionsItemSelected(item);
         }
-        listViewAdapter.delAll();
-        itemViews.addAll(tmpList);
+        //listViewAdapter.delAll();
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
         listViewAdapter.notifyDataSetChanged();
         return true;
     }
@@ -260,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Label label = new Label();
                         label.setLabel(label_input.getText().toString());
                         labels.add(label);
-                        collection_Label.save(MainActivity.this.getBaseContext(), labels);     //待重构
+                        collection_Label.save(MainActivity.this.getBaseContext(), labels);
                         label_id++;
                         navigationView.getMenu().removeGroup(0);
                         navigationView.getMenu().removeGroup(1);
@@ -351,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        Book book = new Book();
+        /*Book book = new Book();
         book.setName("3");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
@@ -359,17 +363,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         itemViews.add(book);
 
         book = new Book();
-        book.setName("2");
+        book.setName("13");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
-        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
+        book = new Book();
+        book.setName("4");
+        book.setAuthor("testAuthor");
+        book.setPublishing_house("testpublisher");
+        book.setPublishing_time("testtime");
+        itemViews.add(book);
 
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);*/
+
+        //添加书本
         ArrayList<Book> tmpList = collection_book.read(getBaseContext());
         itemViews.addAll(tmpList);
-        listViewAdapter.notifyDataSetChanged();     //不用这一句也能正常运行，可删
+
+        //添加标签
+        ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
+        labels.addAll(tmpLabels);
+
+        //添加书架
+        ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
+        shelfs.addAll(tmpShelf);
     }
 
     /** Guo: 长按书本删除 **/
