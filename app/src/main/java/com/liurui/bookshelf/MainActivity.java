@@ -470,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        /*Book book = new Book();
+        Book book = new Book();
         book.setName("3");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
@@ -489,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
-        itemViews.add(book);*/
+        itemViews.add(book);
 
         collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 

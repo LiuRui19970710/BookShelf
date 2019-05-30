@@ -4,22 +4,31 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class EditBookActivity extends Activity {
+    private static final int NONE = 0;
     private static final int PHOTO_GRAPH = 1;// 拍照
     private static final int PHOTO_ZOOM = 2; // 本地
     private static final int PHOTO_RESOULT = 3;// 结果
@@ -29,6 +38,7 @@ public class EditBookActivity extends Activity {
     private ImageView imageView;
     private EditText bookname,author,publish,year,moon,isbn,notes,weburl,label;
     private Spinner readstatue,bookshelf;
+    private Uri imageUri;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,18 +96,96 @@ public class EditBookActivity extends Activity {
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory()+change_path
                                 ,"temp.jpg")));
                         startActivityForResult(intent, PHOTO_GRAPH);
+
                     }
                 });
                 dialog.setNegativeButton("相册", new DialogInterface.OnClickListener() {
                     @Override//设置从本地读取图片事件
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, null);
-                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_UNSPECIFIED);
-                        startActivityForResult(intent, PHOTO_ZOOM);
+                        Intent intent1 = new Intent(Intent. ACTION_PICK, android.provider.MediaStore.Images.Media. EXTERNAL_CONTENT_URI);
+                        intent1.setType( "image/*");
+                        startActivityForResult(intent1, PHOTO_ZOOM);
                     }
                 }).show();
             }
         });
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == NONE)
+            return;
+        // 拍照
+        if (requestCode == PHOTO_GRAPH) {
+            // 设置文件保存路径
+            String filePath = Environment.getExternalStorageDirectory()+change_path;
+            File localFile = new File(filePath);
+            if (!localFile.exists()) {
+                localFile.mkdir();
+            }
+            File picture = new File(Environment.getExternalStorageDirectory()+change_path
+                    + "/temp.jpg");
+            imageUri = Uri.fromFile(picture);
+            startPhotoZoom(imageUri);
+        }
+        if (data == null)
+            return;
+        // 读取相册缩放图片
+        if (requestCode == PHOTO_ZOOM) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null , null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        }
+        // 处理结果
+        if (requestCode == PHOTO_RESOULT) {
+            /*Bundle extras = data.getExtras();
+            if (extras != null) {
+                Toast.makeText(EditBookActivity.this,"1",Toast.LENGTH_SHORT).show();
+                Bitmap photo = extras.getParcelable("data");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0-100)压缩文件
+                //此处可以把Bitmap保存到sd卡中
+                imageView.setImageBitmap(photo); //把图片显示在ImageView控件上
+
+            }*/
+            if(data !=null){ //可能尚未指定intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                //返回有缩略图
+                if(data.hasExtra("data")){
+                    Toast.makeText(EditBookActivity.this,"不为空",Toast.LENGTH_SHORT).show();
+                    Bitmap thumbnail = data.getParcelableExtra("data");
+                    //得到bitmap后的操作
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0-100)压缩文件
+                    //此处可以把Bitmap保存到sd卡中
+                    imageView.setImageBitmap(thumbnail); //把图片显示在ImageView控件上
+                }else{
+                    Toast.makeText(EditBookActivity.this,"为空",Toast.LENGTH_SHORT).show();
+                    //由于指定了目标uri，存储在目标uri，intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    // 通过目标uri，找到图片
+                    // 对图片的缩放处理
+                    // 操作
+                    imageView.setImageURI(imageUri);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void startPhotoZoom(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, IMAGE_UNSPECIFIED);
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 2);
+        intent.putExtra("aspectY", 3);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 300);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, PHOTO_RESOULT);
     }
 }
