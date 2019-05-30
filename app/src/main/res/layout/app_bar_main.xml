@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -28,9 +29,9 @@
 
         </android.support.v7.widget.Toolbar>
 
-
-
-
+    <include layout="@layout/toolbar_new"
+        android:visibility="gone"
+        android:id="@+id/toolbar_delete_layout"/>
 
     </android.support.design.widget.AppBarLayout>
 

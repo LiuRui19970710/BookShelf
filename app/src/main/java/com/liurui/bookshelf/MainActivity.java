@@ -16,6 +16,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +26,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,9 +38,10 @@ import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListViewAdapter.OnShowItemClickListener {
     public static ArrayList<Book> itemViews = new ArrayList<>();
     private ArrayList<Label> labels = new ArrayList<>();
     private ArrayList<Shelf> shelfs = new ArrayList<>();
@@ -53,6 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Spinner spinner;
     ArrayList<String> spinner_list = new ArrayList<>();
 
+    public static boolean isShowCheckBox = false;
+    private List<Book> selectedBooks;
+    private RelativeLayout toolbarDeleteLayout;
+    private Toolbar toolbarDelete;
+    private Toolbar toolbar;
+
     // private FloatingActionButton addone;
    // private FloatingActionButton addmany;
     int REQUEST_CODE_SCAN=10;
@@ -60,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //浮窗绑定
         FloatingActionButton addone=(FloatingActionButton)findViewById(R.id.button_addone);
@@ -102,13 +112,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent=new Intent();
-                intent.setClass(MainActivity.this,Book_Detail_info_Activity.class);
-                Bundle bundle =new Bundle();
-                bundle.putSerializable("book",itemViews.get(i));
-                intent.putExtra("index",i);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (isShowCheckBox) {
+                    Book book = itemViews.get(i);
+                    boolean isChecked = book.isChecked();
+                    if (isChecked) {
+                        book.setChecked(false);
+                    } else {
+                        book.setChecked(true);
+                    }
+                    listViewAdapter.notifyDataSetChanged();
+                } else {
+                    Intent intent=new Intent();
+                    intent.setClass(MainActivity.this,Book_Detail_info_Activity.class);
+                    Bundle bundle =new Bundle();
+                    bundle.putSerializable("book",itemViews.get(i));
+                    intent.putExtra("index",i);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -128,7 +149,101 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //设置左侧列表
         Set_Left_Menu();
 
-        registerForContextMenu(listView);  //important!注册上下文菜单
+        setDelete();
+    }
+
+    private TextView deleteNum;
+
+    private void setDelete() {
+        selectedBooks = new ArrayList<>();
+
+        toolbarDeleteLayout = findViewById(R.id.toolbar_delete_layout);
+        toolbarDelete = toolbarDeleteLayout.findViewById(R.id.toolbar_delete);
+        toolbarDelete.inflateMenu(R.menu.toolbar_new);
+        deleteNum = findViewById(R.id.delete_num);
+
+        listViewAdapter.setOnShowItemClickListener(this);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (isShowCheckBox) {
+                    return false;
+                } else {
+                    isShowCheckBox = true;
+                    for (Book book: itemViews) {
+                        book.setShow(true);
+                    }
+                    itemViews.get(position).setChecked(true);
+                    listViewAdapter.notifyDataSetChanged();
+                    listView.setLongClickable(false);
+                    showDeleteToolBar();
+                }
+                return true;
+            }
+        });
+
+    }
+
+    @Override
+    public void onShowItemClick(Book book) {
+        if (book.isChecked() && !selectedBooks.contains(book)) {
+            selectedBooks.add(book);
+        } else if (!book.isChecked() && selectedBooks.contains(book)) {
+            selectedBooks.remove(book);
+        }
+        deleteNum.setText(selectedBooks.size() + "");
+    }
+
+    private void showDeleteToolBar() {
+        toolbar.setVisibility(View.GONE);
+        toolbarDeleteLayout.setVisibility(View.VISIBLE);
+
+        ImageView returnBack = toolbarDelete.findViewById(R.id.returnback);
+        TextView deleteNum = toolbarDelete.findViewById(R.id.delete_num);
+
+        returnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isShowCheckBox) {
+                    selectedBooks.clear();
+                    for (Book book: itemViews) {
+                        book.setChecked(false);
+                        book.setShow(false);
+                    }
+                    listViewAdapter.notifyDataSetChanged();
+                    isShowCheckBox = false;
+                    listView.setLongClickable(true);
+                    toolbar.setVisibility(View.VISIBLE);
+                    toolbarDeleteLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        toolbarDelete.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int menuItemId = item.getItemId();
+                if (menuItemId == R.id.delete) {
+                    if (selectedBooks != null && selectedBooks.size() > 0) {
+                        itemViews.removeAll(selectedBooks);
+                        selectedBooks.clear();
+                        for (Book book: itemViews) {
+                            book.setChecked(false);
+                            book.setShow(false);
+                        }
+                        listViewAdapter.notifyDataSetChanged();
+                        isShowCheckBox = false;
+                        listView.setLongClickable(true);
+                        toolbar.setVisibility(View.VISIBLE);
+                        toolbarDeleteLayout.setVisibility(View.GONE);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Please choose a book to delete", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -374,9 +489,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
-        itemViews.add(book);
+        itemViews.add(book);*/
 
-        collection_book.save(MainActivity.this.getBaseContext(),itemViews);*/
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
         ArrayList<Book> tmpList = collection_book.read(getBaseContext());
@@ -390,29 +505,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
         shelfs.addAll(tmpShelf);
     }
-
-    /** Guo: 长按书本删除 **/
-    //创建上下文菜单
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, Menu.FIRST, 0, "删除");  //创建上下文菜单里的选项
-    }
-
-    //定义每个选项所要运行的操作
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case Menu.FIRST:
-                //删除指定列表条目
-                AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                int position = menuInfo.position;
-                itemViews.remove(position);
-                break;
-        }
-        listViewAdapter.notifyDataSetChanged();
-        return true;
-    }
-    /** Guo: 长按书本删除 **/
 
     //返回书本数组的引用
     public ArrayList<Book> getItemViews(){
