@@ -7,4 +7,5 @@
     <color name="text_color_84">#d3414141</color>
     <color name="black">#000</color>
     <color name="rad">#ff0000</color>
+    <color name="label_activity">#666666</color>
 </resources>

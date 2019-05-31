@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
 
@@ -56,12 +57,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SearchView searchView;
     Spinner spinner;
     ArrayList<String> spinner_list = new ArrayList<>();
-
+    MenuItem searchItem;
     public static boolean isShowCheckBox = false;
     private List<Book> selectedBooks;
     private RelativeLayout toolbarDeleteLayout;
     private Toolbar toolbarDelete;
     private Toolbar toolbar;
+    int flag=0;
 
     // private FloatingActionButton addone;
    // private FloatingActionButton addmany;
@@ -278,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.main, menu);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -330,10 +332,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         if (id == 0) {
             // Handle the camera action
+            Return_Main();
         } else if (id == 1) {
             searchView.setIconified(false);
             searchView.setOnQueryTextListener(new MyQueryTextListener());
@@ -402,13 +405,146 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
         }else if(id>=6&&id<=1000) {
-            Toast.makeText(MainActivity.this,"此处准备写个跳转函数",Toast.LENGTH_LONG).show();
+            FloatingActionsMenu addone=( FloatingActionsMenu)findViewById(R.id.fabmenu);
+            addone.setVisibility(View.GONE);
+            searchItem.setVisible(false);
+            toolbar.setBackgroundColor(getResources().getColor(R.color.label_activity));
+            if(toolbar.getMenu().size()>5)
+            {
+                toolbar.getMenu().removeItem(0);
+            }
+            MenuItem menuItem = toolbar.getMenu().add(0, 0, 0, "删除").setIcon(R.drawable.ico_three);
+            menuItem.setShowAsAction(1);
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    // Toast.makeText(MainActivity.this,"此处准备写个弹窗函数",Toast.LENGTH_LONG).show();
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("标签名称");
+                    String[] label_choice = new String[]{"重命名", "删除"};
+                    builder.setSingleChoiceItems(label_choice, 0, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                flag = which;
+                            } else if (which == 1) {
+                                flag = which;
+                            }
+                            return;
+                        }
+                    });
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (flag == 1) {
+                                if (labels.size() != 0) {
+                                    labels.remove(id - 6);
+                                    collection_Label.save(MainActivity.this.getBaseContext(), labels);
+                                    navigationView.getMenu().removeGroup(0);
+                                    navigationView.getMenu().removeGroup(1);
+                                    navigationView.getMenu().removeGroup(2);
+                                    Set_Left_Menu();
+                                    Return_Main();
+                                }
+                                flag = 0;
+                            } else if (flag == 0) {
+                                rename_label(id);
+                                Set_Left_Menu();
+                                flag = 0;
+                            }
+                        }
+                    });
+                    builder.show();
+
+                    return true;
+                }
+            });
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
 
         return true;
+    }
+
+    public void rename_label(int index)
+    {
+        Add_Label(labels.get(index-6).getLabel(),labels.get(index-6).getId());
+        labels.remove(index-6);
+        collection_Label.save(MainActivity.this.getBaseContext(), labels);
+        navigationView.getMenu().removeGroup(0);
+        navigationView.getMenu().removeGroup(1);
+        navigationView.getMenu().removeGroup(2);
+    }
+
+    public void Return_Main()
+    {
+        FloatingActionsMenu addone=( FloatingActionsMenu)findViewById(R.id.fabmenu);
+        addone.setVisibility(View.VISIBLE);
+        searchItem.setVisible(true);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.getMenu().removeItem(0);
+    }
+
+    public void Add_Label(String init, final int index)
+    {
+        final EditText label_input;
+        final TextView label_length;
+        LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(MainActivity.this);
+        final View v = inflater.inflate(R.layout.label_input_window,null, false);
+        label_length = v.findViewById(R.id.label_length);
+        label_input = v.findViewById(R.id.label_input);
+        label_input.setText(init);
+        label_input.addTextChangedListener(new TextWatcher() {
+
+            int current_Length = 0;
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (current_Length < 15) {
+                    current_Length = label_input.getText().length();
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                label_length.setText(current_Length + "/15");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                label_length.setText(current_Length + "/15");
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("标签名称");
+        builder.setView(v);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(MainActivity.this,label_input.getText(),Toast.LENGTH_LONG).show();
+                if(label_input.getText().length()!=0) {
+                    Label label = new Label();
+                    label.setLabel(label_input.getText().toString());
+                    label.setId(index);
+                    labels.add(label);
+                    collection_Label.save(MainActivity.this.getBaseContext(), labels);
+                    label_id++;
+                    navigationView.getMenu().removeGroup(0);
+                    navigationView.getMenu().removeGroup(1);
+                    navigationView.getMenu().removeGroup(2);
+                    Set_Left_Menu();
+                }
+            }
+
+        });
+
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 
     class MyQueryTextListener implements SearchView.OnQueryTextListener{
@@ -459,7 +595,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         for(label_id=0;label_id<labels.size();label_id++)
         {
-            navigationView.getMenu().add(1,label_id+6,0,labels.get(label_id).getLabel());
+            navigationView.getMenu().add(1,label_id+6,0,labels.get(label_id).getLabel()).setIcon(R.drawable.label);
         }
         navigationView.getMenu().add(1,2,0,"添加新标签").setIcon(R.drawable.add);
         navigationView.getMenu().add(2,3,0,"捐赠").setIcon(R.drawable.donate);
@@ -470,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        Book book = new Book();
+      /*  Book book = new Book();
         book.setName("3");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
@@ -491,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
-        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);*/
 
         //添加书本
         ArrayList<Book> tmpList = collection_book.read(getBaseContext());
