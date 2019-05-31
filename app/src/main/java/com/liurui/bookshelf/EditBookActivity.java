@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 
 
 public class EditBookActivity extends Activity {
+    private int NEW_SHELF = 0;
+    private int NEW_SHELF_INDEX = 0;
     private static final int NONE = 0;
     private static final int PHOTO_GRAPH = 1;// 拍照
     private static final int PHOTO_ZOOM = 2; // 本地
@@ -145,16 +148,36 @@ public class EditBookActivity extends Activity {
                             dialog.dismiss();
                         }
                     })
-                            .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Button btn_confrim = ((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE);
                                     String text = inputServer.getText().toString();
-                                    spinner_list.add(spinner_list.size()-1,text);
+                                    if(text.length()==0){
+                                       btn_confrim.setEnabled(false);
+                                        Toast.makeText(EditBookActivity.this,"Null String",Toast.LENGTH_SHORT).show();
+                                    }
+                                    else if(text.length()>10){
+                                        Toast.makeText(EditBookActivity.this,"Input String too long",Toast.LENGTH_SHORT).show();
+                                        btn_confrim.setEnabled(false);
+                                    }
+                                    else{
+                                        boolean tag = true;
+                                        for(int index=0;index<shelfs.size();index++){
+                                            if(text.equals(shelfs.get(index).getShelf())){
+                                                tag = false;
+                                                break;
+                                            }
+                                        }
+                                        if(tag){
+                                            spinner_list.add(spinner_list.size()-1,text);
+                                            Shelf newShelf = new Shelf();
+                                            newShelf.setShelf(text);
+                                            shelfs.add(newShelf);
+                                            collection_Shelf.save(EditBookActivity.this,shelfs);
+                                        }
+                                    }
 
-                                    Shelf newShelf = new Shelf();
-                                    newShelf.setShelf(text);
-                                    shelfs.add(newShelf);
-                                    collection_Shelf.save(EditBookActivity.this,shelfs);
                                 }
                             });
                     builder.show();
