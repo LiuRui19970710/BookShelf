@@ -15,7 +15,12 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class EditBookActivity extends Activity {
@@ -39,6 +45,11 @@ public class EditBookActivity extends Activity {
     private EditText bookname,author,publish,year,moon,isbn,notes,weburl,label;
     private Spinner readstatue,bookshelf;
     private Uri imageUri;
+    Toolbar toolbar;
+    Collection collection_Shelf = new Collection("Shelf");
+    ArrayList<String> spinner_list = new ArrayList<>();
+    ArrayList<Shelf> shelfs;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,15 +69,25 @@ public class EditBookActivity extends Activity {
         notes = (EditText)findViewById(R.id.edit_notes);
         weburl = (EditText)findViewById(R.id.edit_weburl);
         label = (EditText)findViewById(R.id.edit_label);
+        toolbar = (Toolbar)findViewById(R.id.edit_toolbar);
+        final ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
+        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
         //设置内容
         //imageView.setImageResource(MainActivity.itemViews.get(index).getPictureid());
         bookname.setText(MainActivity.itemViews.get(index).getName());
         author.setText(MainActivity.itemViews.get(index).getAuthor());
         publish.setText(MainActivity.itemViews.get(index).getPublishing_house());
+        toolbar.setTitle("编辑书籍详情");
         //year.setText(MainActivity.itemViews.get(index).getYear());
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         readstatue.setSelection(MainActivity.itemViews.get(index).getReading_status());
-        //书架内容暂未设置
+        //书架内容
+        shelfs = collection_Shelf.read(EditBookActivity.this);
+        for(int index=0;index<shelfs.size();index++)
+            spinner_list.add(shelfs.get(index).getShelf());
+        bookshelf.setAdapter(spinner_adapter);
+        spinner_list.add("添加新书架");
+        //其他
         notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         weburl.setText(MainActivity.itemViews.get(index).getItem_website());
         label.setText(MainActivity.itemViews.get(index).getItem_labels());
@@ -110,6 +131,41 @@ public class EditBookActivity extends Activity {
             }
         });
 
+        //设置书架的Listener
+        bookshelf.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final String shelf_selected = (String)bookshelf.getItemAtPosition(position);
+                if(shelf_selected.equals("添加新书架")){
+                    final EditText inputServer = new EditText(EditBookActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EditBookActivity.this);
+                    builder.setTitle("书架名称").setView(inputServer).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                            .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String text = inputServer.getText().toString();
+                                    spinner_list.add(spinner_list.size()-1,text);
+
+                                    Shelf newShelf = new Shelf();
+                                    newShelf.setShelf(text);
+                                    shelfs.add(newShelf);
+                                    collection_Shelf.save(EditBookActivity.this,shelfs);
+                                }
+                            });
+                    builder.show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,6 +231,7 @@ public class EditBookActivity extends Activity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     public void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, IMAGE_UNSPECIFIED);
@@ -187,5 +244,25 @@ public class EditBookActivity extends Activity {
         intent.putExtra("outputY", 300);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, PHOTO_RESOULT);
+    }
+
+    /**
+     * toolbar绑定menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if(id == R.id.edit_tosave){
+            Toast.makeText(EditBookActivity.this,"123",Toast.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

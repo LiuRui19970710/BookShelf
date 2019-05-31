@@ -43,6 +43,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListViewAdapter.OnShowItemClickListener {
+    private ArrayList<Book> allBook = new ArrayList<>();
     public static ArrayList<Book> itemViews = new ArrayList<>();
     private ArrayList<Label> labels = new ArrayList<>();
     private ArrayList<Shelf> shelfs = new ArrayList<>();
@@ -135,13 +136,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
-
-        spinner_list.add("所有");
-        spinner_list.add("默认书架");
-        for(int index=0;index<shelfs.size();index++){
-            spinner_list.add(shelfs.get(index).getShelf());
-        }
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
         spinner = super.findViewById(R.id.spinner);
@@ -229,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (menuItemId == R.id.delete) {
                     if (selectedBooks != null && selectedBooks.size() > 0) {
                         itemViews.removeAll(selectedBooks);
+                        bulk_delete(selectedBooks);
                         selectedBooks.clear();
                         for (Book book: itemViews) {
                             book.setChecked(false);
@@ -606,22 +601,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-      /*  Book book = new Book();
-        book.setName("3");
+        /*Book book = new Book();
+        book.setName("111");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
         book = new Book();
-        book.setName("13");
+        book.setName("222");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
         itemViews.add(book);
 
         book = new Book();
-        book.setName("4");
+        book.setName("333");
         book.setAuthor("testAuthor");
         book.setPublishing_house("testpublisher");
         book.setPublishing_time("testtime");
@@ -630,20 +625,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         collection_book.save(MainActivity.this.getBaseContext(),itemViews);*/
 
         //添加书本
-        ArrayList<Book> tmpList = collection_book.read(getBaseContext());
-        itemViews.addAll(tmpList);
+        allBook = collection_book.read(getBaseContext());
+        itemViews.addAll(allBook);
 
         //添加标签
         ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
         labels.addAll(tmpLabels);
 
         //添加书架
+        /*Shelf s = new Shelf();
+        s.setShelf("默认书架");
+        shelfs.add(s);
+        collection_Shelf.save(MainActivity.this.getBaseContext(),shelfs);*/
+
+        spinner_list.add("所有");
         ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
         shelfs.addAll(tmpShelf);
+        for(int index=0;index<shelfs.size();index++){
+            spinner_list.add(shelfs.get(index).getShelf());
+        }
     }
 
     //返回书本数组的引用
     public ArrayList<Book> getItemViews(){
         return itemViews;
+    }
+
+    private void deleteBook(int book_id){
+        for(int index=0;index<allBook.size();index++){
+            if(book_id==allBook.get(index).getId()){
+                allBook.remove(index);
+                collection_book.save(MainActivity.this.getBaseContext(),allBook);
+                break;
+            }
+        }
+    }
+
+    private void bulk_delete(List<Book> selectedBooks){
+        /*for(int id_index=0;id_index<book_id.length;id_index++){
+            for(int index=0;index<allBook.size();index++){
+                if(book_id[id_index]==allBook.get(index).getId()){
+                    allBook.remove(index);
+                    break;
+                }
+            }
+        }*/
+        allBook.removeAll(selectedBooks);
+        collection_book.save(MainActivity.this.getBaseContext(),allBook);
     }
 }
