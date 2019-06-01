@@ -53,6 +53,7 @@ public class EditBookActivity extends Activity {
     Collection collection_Shelf = new Collection("Shelf");
     ArrayList<String> spinner_list = new ArrayList<>();
     ArrayList<Shelf> shelfs;
+    private int nowIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -178,7 +179,7 @@ public class EditBookActivity extends Activity {
         bookshelf.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final String shelf_selected = (String)bookshelf.getItemAtPosition(position);
+                String shelf_selected = (String)bookshelf.getItemAtPosition(position);
                 if(shelf_selected.equals("添加新书架")){
                     final EditText inputServer = new EditText(EditBookActivity.this);
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditBookActivity.this);
@@ -186,6 +187,7 @@ public class EditBookActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            bookshelf.setSelection(nowIndex,true);
                         }
                     })
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -195,11 +197,13 @@ public class EditBookActivity extends Activity {
                                     String text = inputServer.getText().toString();
                                     if(text.length()==0){
                                        btn_confrim.setEnabled(false);
+                                        bookshelf.setSelection(nowIndex,true);
                                         Toast.makeText(EditBookActivity.this,"Null String",Toast.LENGTH_SHORT).show();
                                     }
                                     else if(text.length()>10){
-                                        Toast.makeText(EditBookActivity.this,"Input String too long",Toast.LENGTH_SHORT).show();
                                         btn_confrim.setEnabled(false);
+                                        bookshelf.setSelection(nowIndex,true);
+                                        Toast.makeText(EditBookActivity.this,"Input String too long",Toast.LENGTH_SHORT).show();
                                     }
                                     else{
                                         boolean tag = true;
@@ -211,17 +215,24 @@ public class EditBookActivity extends Activity {
                                         }
                                         if(tag){
                                             spinner_list.add(spinner_list.size()-1,text);
+                                            spinner_adapter.notifyDataSetChanged();
+                                            bookshelf.setSelection(spinner_list.size()-2,true);
                                             Shelf newShelf = new Shelf();
                                             newShelf.setShelf(text);
                                             shelfs.add(newShelf);
                                             collection_Shelf.save(EditBookActivity.this,shelfs);
+                                            nowIndex = bookshelf.getSelectedItemPosition();
                                         }
+                                        else
+                                            bookshelf.setSelection(nowIndex,true);
                                     }
 
                                 }
                             });
                     builder.show();
                 }
+                else
+                    nowIndex = bookshelf.getSelectedItemPosition();
             }
 
             @Override
