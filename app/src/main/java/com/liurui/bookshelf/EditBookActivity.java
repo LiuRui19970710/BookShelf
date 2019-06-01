@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,8 +74,10 @@ public class EditBookActivity extends Activity {
         weburl = (EditText)findViewById(R.id.edit_weburl);
         label = (EditText)findViewById(R.id.edit_label);
         toolbar = (Toolbar)findViewById(R.id.edit_toolbar);
+
         final ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinner_list);  //创建一个数组适配器
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+
         //设置内容
         //imageView.setImageResource(MainActivity.itemViews.get(index).getPictureid());
         bookname.setText(MainActivity.itemViews.get(index).getName());
@@ -84,12 +87,14 @@ public class EditBookActivity extends Activity {
         //year.setText(MainActivity.itemViews.get(index).getYear());
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         readstatue.setSelection(MainActivity.itemViews.get(index).getReading_status());
+
         //书架内容
         shelfs = collection_Shelf.read(EditBookActivity.this);
         for(int index=0;index<shelfs.size();index++)
             spinner_list.add(shelfs.get(index).getShelf());
         bookshelf.setAdapter(spinner_adapter);
         spinner_list.add("添加新书架");
+
         //其他
         notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         weburl.setText(MainActivity.itemViews.get(index).getItem_website());
@@ -98,6 +103,41 @@ public class EditBookActivity extends Activity {
         //解决拍照的问题
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+        //标签的点击事件
+        label.setInputType(InputType.TYPE_NULL);
+        label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dialog=new AlertDialog.Builder(EditBookActivity.this);
+                //获取AlertDialog对象
+                dialog.setTitle("选择标签");//设置标题
+                final String[] labelarray = new String[]{"1","2","3"};
+                boolean[] isChecked = new boolean[labelarray.length];
+                dialog.setMultiChoiceItems(labelarray, isChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        Toast.makeText(EditBookActivity.this,labelarray[i]+b,Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.setCancelable(true);//设置是否可取消
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override//设置拍照事件的事件
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String filePath = Environment.getExternalStorageDirectory()+change_path;
+                        File localFile = new File(filePath);
+                        if (!localFile.exists()) {
+                            localFile.mkdir();
+                        }
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory()+change_path
+                                ,"temp.jpg")));
+                        startActivityForResult(intent, PHOTO_GRAPH);
+
+                    }
+                }).show();
+            }
+        });
 
         //图书图片编辑
         imageView.setOnClickListener(new View.OnClickListener() {
