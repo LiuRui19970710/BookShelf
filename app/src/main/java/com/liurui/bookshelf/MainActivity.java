@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onClick(DialogInterface dialog, int which) {
                                     String isbn = et.getText().toString();
                                     if(et.length()==10||et.length()==13){
-                                        Toast.makeText(MainActivity.this,"应调用函数",Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(MainActivity.this,"应调用函数",Toast.LENGTH_SHORT).show();
+                                        initData(et.getText().toString());
                                     }
                                     else
                                         Toast.makeText(MainActivity.this,"ISBN长度不对",Toast.LENGTH_SHORT).show();
