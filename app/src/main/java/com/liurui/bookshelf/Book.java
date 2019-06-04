@@ -1,6 +1,7 @@
 package com.liurui.bookshelf;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ public class Book implements Serializable {
     private String item_labels;
     private String item_website;
     private Bitmap bitmap;
+    private byte[] data;
 
     private boolean isShow = false;
     private boolean isChecked = false;
@@ -125,11 +127,12 @@ public class Book implements Serializable {
         isChecked = checked;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+
+    public void setBitmap(byte[] Byte) {
+        this.data = Byte;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public Bitmap getBitmap(){
+        return BitmapFactory.decodeByteArray(this.data, 0, this.data.length);//从字节数组解码位图
     }
 }

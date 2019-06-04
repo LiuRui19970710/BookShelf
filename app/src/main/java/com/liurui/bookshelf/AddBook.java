@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -34,8 +35,14 @@ public class AddBook {
         book.setAuthor(Author);
         book.setPublishing_house(Publisher);
         book.setPublishing_time(Time);
-        book.setBitmap(bitmap);
+        book.setBitmap(getBytes(bitmap));
         return book;
     }
 
+    public static byte[] getBytes(Bitmap bitmap){
+        //实例化字节数组输出流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
+        return baos.toByteArray();//创建分配字节数组
+    }
 }
