@@ -312,18 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         returnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isShowCheckBox) {
-                    selectedBooks.clear();
-                    for (Book book: itemViews) {
-                        book.setChecked(false);
-                        book.setShow(false);
-                    }
-                    listViewAdapter.notifyDataSetChanged();
-                    isShowCheckBox = false;
-                    listView.setLongClickable(true);
-                    toolbar.setVisibility(View.VISIBLE);
-                    toolbarDeleteLayout.setVisibility(View.GONE);
-                }
+                destroyDeleteCheckBox();
             }
         });
 
@@ -782,5 +771,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }*/
         allBook.removeAll(selectedBooks);
         collection_book.save(MainActivity.this.getBaseContext(),allBook);
+    }
+
+    private void destroyDeleteCheckBox() {
+        if (isShowCheckBox) {
+            selectedBooks.clear();
+            for (Book book: itemViews) {
+                book.setChecked(false);
+                book.setShow(false);
+            }
+            listViewAdapter.notifyDataSetChanged();
+            isShowCheckBox = false;
+            listView.setLongClickable(true);
+            toolbar.setVisibility(View.VISIBLE);
+            toolbarDeleteLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        destroyDeleteCheckBox();
     }
 }
