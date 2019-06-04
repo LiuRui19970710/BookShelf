@@ -65,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbarDelete;
     private Toolbar toolbar;
     int flag=0;
+    final String[] gender = new String[]{"扫描条形码","手动输入ISBN","手动添加书籍"};
 
     // private FloatingActionButton addone;
    // private FloatingActionButton addmany;
     int REQUEST_CODE_SCAN=10;
+    int REQUEST_CODE_MANUALADDITION=10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +84,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, CaptureActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_SCAN);
+                final Intent intent=new Intent(MainActivity.this, CaptureActivity.class);
+                final AlertDialog.Builder builder_isbn = new AlertDialog.Builder(MainActivity.this);
+                final EditText et = new EditText(MainActivity.this);
+                final Intent intent_Edit = new Intent(MainActivity.this,EditBookActivity.class);
+                final Book manual_addition = new Book();
+                final Bundle bundle = new Bundle();
 
+                final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("请选择添加方式");
+                builder.setItems(gender, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which==0)
+                            startActivityForResult(intent,REQUEST_CODE_SCAN);
+                        if(which==1){
+                            builder_isbn.setTitle("手动添加").setMessage("请输入书籍的ISBN码（10或13位数字）").setView(et).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String isbn = et.getText().toString();
+                                    if(et.length()==10||et.length()==13){
+                                        Toast.makeText(MainActivity.this,"应调用函数",Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                        Toast.makeText(MainActivity.this,"ISBN长度不对",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            builder_isbn.show();
+                        }
+                        if(which==2){
+                            {
+                                manual_addition.setId(0);
+                                manual_addition.setIsbn("");
+                                manual_addition.setPublishing_time("");
+                                manual_addition.setPublishing_house("");
+                                manual_addition.setName("");
+                                manual_addition.setAuthor("");
+                                manual_addition.setChecked(false);
+                                manual_addition.setItem_bookshelf("");
+                                manual_addition.setItem_labels("");
+                                manual_addition.setItem_notes("");
+                                manual_addition.setItem_website("");
+                                manual_addition.setPictureid(0);
+                            }
+                            itemViews.add(manual_addition);
+                            bundle.putSerializable("manual_add_boook",manual_addition);
+                            intent_Edit.putExtras(bundle);
+                            intent_Edit.putExtra("index",itemViews.size()-1);
+                            startActivityForResult(intent_Edit,REQUEST_CODE_MANUALADDITION);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
         //批量添加的点击事件
