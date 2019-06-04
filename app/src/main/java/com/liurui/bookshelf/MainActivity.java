@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,6 +40,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbarDelete;
     private Toolbar toolbar;
     int flag=0;
+    private Handler uiHandler = new Handler();
+    Scanning scanning= new Scanning();
     final String[] gender = new String[]{"扫描条形码","手动输入ISBN","手动添加书籍"};
 
     // private FloatingActionButton addone;
@@ -130,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 manual_addition.setItem_labels("");
                                 manual_addition.setItem_notes("");
                                 manual_addition.setItem_website("");
-                                manual_addition.setPictureid(0);
                             }
                             itemViews.add(manual_addition);
                             bundle.putSerializable("manual_add_boook",manual_addition);
@@ -202,6 +208,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Set_Left_Menu();
 
         setDelete();
+    }
+
+    private void initData(final String ISBN) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 写子线程中的操作
+                String information="",name,isbn;
+                AddBook addBook = new AddBook(getBaseContext());
+
+
+                try {
+                    information = scanning.main(ISBN);
+
+                    GetString getString = new GetString(information);
+                    Log.i("test", "run: " + getString.getName() + " " + getString.getISBN() + " " + getString.getAuthor() + " " + getString.getPublisher()
+                            + " " + getString.getPubTime() + " " + getString.getImgPath());
+                    if(getString.getName()!="" && getString.getISBN()!="" && getString.getAuthor()!="" && getString.getPublisher()!=""
+                            &&getString.getPubTime()!=""&&getString.getImgPath()!="") {
+                        DownLoadImg downLoadImg = new DownLoadImg();
+
+                        itemViews.add(addBook.add_book(getString.getName(), getString.getAuthor(), getString.getPublisher(),
+                                getString.getPubTime(), downLoadImg.DownloadImg(getString.getImgPath())));
+                        collection_book.save(MainActivity.this.getBaseContext(), itemViews);
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                listViewAdapter.notifyDataSetChanged();
+                            }
+                        };
+                        uiHandler.post(runnable);
+                    }
+                    else
+                    {
+                        Looper.prepare();
+                        Toast.makeText(MainActivity.this, "扫描信息错误", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private TextView deleteNum;
@@ -307,9 +361,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (resultCode==RESULT_OK){
                     if (data!=null){
                         String content=data.getStringExtra(Constant.CODED_CONTENT);
-                        AddBook addBook = new AddBook(getBaseContext());
-                        itemViews.add(addBook.add_book(content));
-                        listViewAdapter.notifyDataSetChanged();
+                        Log.i("test2", "onActivityResult: "+content);
+                        initData(content);
                     }
                 }
         }

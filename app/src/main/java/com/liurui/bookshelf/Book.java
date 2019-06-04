@@ -1,5 +1,7 @@
 package com.liurui.bookshelf;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class Book implements Serializable {
@@ -14,7 +16,7 @@ public class Book implements Serializable {
     private String item_notes;
     private String item_labels;
     private String item_website;
-    private int pictureid;
+    private Bitmap bitmap;
 
     private boolean isShow = false;
     private boolean isChecked = false;
@@ -98,13 +100,6 @@ public class Book implements Serializable {
         this.reading_status = reading_status;
     }
 
-    public int getPictureid() {
-        return pictureid;
-    }
-
-    public void setPictureid(int pictureid) {
-        this.pictureid = pictureid;
-    }
 
     public String getPublishing_time() {
         return publishing_time;
@@ -128,5 +123,13 @@ public class Book implements Serializable {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }
