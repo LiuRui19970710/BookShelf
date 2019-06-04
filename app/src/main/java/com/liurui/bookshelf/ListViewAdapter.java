@@ -73,7 +73,7 @@ public class ListViewAdapter extends BaseAdapter {
             viewHolder.checkBox.setVisibility(View.GONE);
         }
 
-        viewHolder.BookCover.setImageResource(R.drawable.bookcover);
+        viewHolder.BookCover.setImageBitmap(book.getBitmap());
         viewHolder.BookName.setText(book.getName());
         viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house()+"    "+book.getPublishing_time());
 
