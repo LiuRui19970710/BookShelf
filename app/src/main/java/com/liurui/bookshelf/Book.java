@@ -132,7 +132,15 @@ public class Book implements Serializable {
         this.data = Byte;
     }
 
-    public Bitmap getBitmap(){
-        return BitmapFactory.decodeByteArray(this.data, 0, this.data.length);//从字节数组解码位图
+//    public Bitmap getBitmap(){
+//        return BitmapFactory.decodeByteArray(this.data, 0, this.data.length);//从字节数组解码位图
+//    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 }

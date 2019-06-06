@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Scanning scanning= new Scanning();
     final String[] gender = new String[]{"扫描条形码","手动输入ISBN","手动添加书籍"};
 
-    // private FloatingActionButton addone;
-   // private FloatingActionButton addmany;
+    //private FloatingActionButton addone;
+    //private FloatingActionButton addmany;
     int REQUEST_CODE_SCAN=10;
     int REQUEST_CODE_MANUALADDITION=10;
     @Override
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             bundle.putSerializable("manual_add_boook",manual_addition);
                             intent_Edit.putExtras(bundle);
                             intent_Edit.putExtra("index",itemViews.size()-1);
+                            intent_Edit.putExtra("method_start","main");
                             startActivityForResult(intent_Edit,REQUEST_CODE_MANUALADDITION);
                         }
                     }
@@ -191,7 +192,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent=new Intent();
                     intent.setClass(MainActivity.this,Book_Detail_info_Activity.class);
                     Bundle bundle =new Bundle();
-                    bundle.putSerializable("book",itemViews.get(i));
+                    bundle.putSerializable("label",labels);
+                    //bundle.putSerializable("book",itemViews.get(i));
                     intent.putExtra("index",i);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -700,28 +702,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void Initialize(){
-        /*Book book = new Book();
-        book.setName("111");
-        book.setAuthor("testAuthor");
-        book.setPublishing_house("testpublisher");
-        book.setPublishing_time("testtime");
-        itemViews.add(book);
+//        Book book = new Book();
+//        book.setName("111");
+//        book.setAuthor("testAuthor");
+//        book.setPublishing_house("testpublisher");
+//        book.setPublishing_time("testtime");
+//        itemViews.add(book);
+//
+//        book = new Book();
+//        book.setName("222");
+//        book.setAuthor("testAuthor");
+//        book.setPublishing_house("testpublisher");
+//        book.setPublishing_time("testtime");
+//        itemViews.add(book);
+//
+//        book = new Book();
+//        book.setName("333");
+//        book.setAuthor("testAuthor");
+//        book.setPublishing_house("testpublisher");
+//        book.setPublishing_time("testtime");
+//        itemViews.add(book);
 
-        book = new Book();
-        book.setName("222");
-        book.setAuthor("testAuthor");
-        book.setPublishing_house("testpublisher");
-        book.setPublishing_time("testtime");
-        itemViews.add(book);
-
-        book = new Book();
-        book.setName("333");
-        book.setAuthor("testAuthor");
-        book.setPublishing_house("testpublisher");
-        book.setPublishing_time("testtime");
-        itemViews.add(book);
-
-        collection_book.save(MainActivity.this.getBaseContext(),itemViews);*/
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
         allBook = collection_book.read(getBaseContext());
@@ -792,5 +794,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         destroyDeleteCheckBox();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        listViewAdapter.notifyDataSetChanged();
     }
 }

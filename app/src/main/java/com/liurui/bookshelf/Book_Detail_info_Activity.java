@@ -9,11 +9,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class Book_Detail_info_Activity extends Activity {
     private TextView book_name, author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website;
     private android.widget.ImageView picture;
     private int index;
+    private ArrayList<Label> labels;
     private Book book;
     private Button edit;
 
@@ -37,28 +40,48 @@ public class Book_Detail_info_Activity extends Activity {
         //刷新数据
         final Intent intent = getIntent();
         index = intent.getIntExtra("index", 0);
+        labels = (ArrayList<Label>) intent.getSerializableExtra("label");
         book = (Book) intent.getSerializableExtra("book");
-        book_name.setText(book.getName());
-        author_name.setText(book.getAuthor());
-        publisher.setText(book.getPublishing_house());
-        //data.setText(book.getYear()+"-"+book.getMoon());
-        isbn.setText(book.getIsbn());
-        reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[book.getReading_status()]);
-        item_website.setText(book.getItem_website());
-        item_labels.setText(book.getItem_labels());
-        item_bookshelf.setText(book.getItem_bookshelf());
-        item_notes.setText(book.getItem_notes());
+        book_name.setText(MainActivity.itemViews.get(index).getName());
+        author_name.setText(MainActivity.itemViews.get(index).getAuthor());
+        publisher.setText(MainActivity.itemViews.get(index).getPublishing_house());
+        data.setText(MainActivity.itemViews.get(index).getPublishing_time());
+        isbn.setText(MainActivity.itemViews.get(index).getIsbn());
+        reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[MainActivity.itemViews.get(index).getReading_status()]);
+        item_website.setText(MainActivity.itemViews.get(index).getItem_website());
+        item_labels.setText(MainActivity.itemViews.get(index).getItem_labels());
+        item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
+        item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1=new Intent();
                 intent1.setClass(Book_Detail_info_Activity.this,EditBookActivity.class);
+                Bundle bundle =new Bundle();
+                bundle.putSerializable("label",labels);
                 intent1.putExtra("index",index);
+                intent1.putExtras(bundle);
+                intent1.putExtra("method_start","detail");
                 startActivity(intent1);
             }
         });
 
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        book_name.setText(MainActivity.itemViews.get(index).getName());
+        author_name.setText(MainActivity.itemViews.get(index).getAuthor());
+        publisher.setText(MainActivity.itemViews.get(index).getPublishing_house());
+        data.setText(MainActivity.itemViews.get(index).getPublishing_time());
+        isbn.setText(MainActivity.itemViews.get(index).getIsbn());
+        reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[MainActivity.itemViews.get(index).getReading_status()]);
+        item_website.setText(MainActivity.itemViews.get(index).getItem_website());
+        item_labels.setText(MainActivity.itemViews.get(index).getItem_labels());
+        item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
+        item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
     }
 }
