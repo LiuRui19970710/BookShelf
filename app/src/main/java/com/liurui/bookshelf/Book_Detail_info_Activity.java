@@ -20,6 +20,7 @@ public class Book_Detail_info_Activity extends Activity {
     private Book book;
     private Button edit;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class Book_Detail_info_Activity extends Activity {
         item_website = (TextView) findViewById(R.id.book_detail_item_website_text);
         picture = (ImageView)findViewById(R.id.picture);
         edit = (Button)findViewById(R.id.edit);
+
         //刷新数据
         final Intent intent = getIntent();
         index = intent.getIntExtra("index", 0);
@@ -52,6 +54,8 @@ public class Book_Detail_info_Activity extends Activity {
         item_labels.setText(MainActivity.itemViews.get(index).getItem_labels());
         item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
         item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
+        picture.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
+
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override

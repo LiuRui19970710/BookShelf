@@ -96,13 +96,16 @@ public class EditBookActivity extends Activity {
         //year.setText(MainActivity.itemViews.get(index).getYear());
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         readstatue.setSelection(MainActivity.itemViews.get(index).getReading_status());
-
+        if(MainActivity.itemViews.get(index).getBitmap()!=null){
+            imageView.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
+        }
         //书架内容
         shelfs = collection_Shelf.read(EditBookActivity.this);
         for (int index = 0; index < shelfs.size(); index++)
             spinner_list.add(shelfs.get(index).getShelf());
         bookshelf.setAdapter(spinner_adapter);
         spinner_list.add("添加新书架");
+
 
         //其他
         notes.setText(MainActivity.itemViews.get(index).getItem_notes());
