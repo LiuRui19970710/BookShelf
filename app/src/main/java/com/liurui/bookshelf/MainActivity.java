@@ -808,5 +808,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onRestart() {
         super.onRestart();
         listViewAdapter.notifyDataSetChanged();
+        spinner_list.clear();
+        shelfs.clear();
+        spinner_list.add("所有");
+        ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
+        shelfs.addAll(tmpShelf);
+        for(int index=0;index<shelfs.size();index++){
+            spinner_list.add(shelfs.get(index).getShelf());
+        }
     }
 }
