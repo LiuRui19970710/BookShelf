@@ -37,8 +37,7 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.yzq.zxinglibrary.android.CaptureActivity;
-import com.yzq.zxinglibrary.common.Constant;
+
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -76,8 +75,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //private FloatingActionButton addone;
     //private FloatingActionButton addmany;
-    int REQUEST_CODE_SCAN=10;
+    final int REQUEST_CODE_SCAN=10;
     int REQUEST_CODE_MANUALADDITION=10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent intent=new Intent(MainActivity.this, CaptureActivity.class);
+                final Intent intent=new Intent(MainActivity.this, ScannerView.class);
                 final AlertDialog.Builder builder_isbn = new AlertDialog.Builder(MainActivity.this);
                 final EditText et = new EditText(MainActivity.this);
                 final Intent intent_Edit = new Intent(MainActivity.this,EditBookActivity.class);
@@ -155,7 +155,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addmany.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,BatchAddActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -349,10 +351,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         switch (requestCode){
-            case 10:
-                if (resultCode==RESULT_OK){
+            case REQUEST_CODE_SCAN:
+                if (resultCode==0){
                     if (data!=null){
-                        String content=data.getStringExtra(Constant.CODED_CONTENT);
+                        String content=data.getStringExtra("isbn");
+                        //Toast.makeText(MainActivity.this,content,Toast.LENGTH_SHORT).show();
                         Log.i("test2", "onActivityResult: "+content);
                         initData(content);
                     }

@@ -8,4 +8,5 @@
     <color name="black">#000</color>
     <color name="rad">#ff0000</color>
     <color name="label_activity">#666666</color>
+    <color name="transparent">#00000000</color>
 </resources>
