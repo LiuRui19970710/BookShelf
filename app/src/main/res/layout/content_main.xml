@@ -11,5 +11,6 @@
     <ListView
         android:id="@+id/BookList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:divider="@null"></ListView>
 </android.support.constraint.ConstraintLayout>

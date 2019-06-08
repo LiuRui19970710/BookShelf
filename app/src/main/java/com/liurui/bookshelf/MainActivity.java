@@ -50,7 +50,6 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListViewAdapter.OnShowItemClickListener {
-    private ArrayList<Book> allBook = new ArrayList<>();
     public static ArrayList<Book> itemViews = new ArrayList<>();
     private ArrayList<Label> labels = new ArrayList<>();
     private ArrayList<Shelf> shelfs = new ArrayList<>();
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Handler uiHandler = new Handler();
     Scanning scanning= new Scanning();
     final String[] gender = new String[]{"扫描条形码","手动输入ISBN","手动添加书籍"};
+    boolean[] display;
 
     //private FloatingActionButton addone;
     //private FloatingActionButton addmany;
@@ -173,12 +173,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Initialize();
 
         listView = (ListView)findViewById(R.id.BookList);
         listViewAdapter = new ListViewAdapter(MainActivity.this,itemViews);
         listView.setAdapter(listViewAdapter);
-
-        Initialize();
 
         //listview的点击事件跳转
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -215,16 +214,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String shlef_selected = (String)spinner.getItemAtPosition(position);
+                display = new boolean[itemViews.size()];
                 if(shlef_selected.equals("所有")){
-                    listViewAdapter.delAll();
-                    itemViews.addAll(allBook);
+                    for(int index=0;index<itemViews.size();index++)
+                        display[index] = true;
+                    listViewAdapter.change(display);
                 }
                 else{
-                    listViewAdapter.delAll();
-                    for(Book book:allBook){
-                        if(book.getItem_bookshelf().equals(shlef_selected))
-                            itemViews.add(book);
-                    }
+                    for(int index=0;index<itemViews.size();index++)
+                        if(itemViews.get(index).getItem_bookshelf().equals(shlef_selected))
+                            display[index] = true;
+                        else
+                            display[index] = false;
+                        listViewAdapter.change(display);
                 }
                 listViewAdapter.notifyDataSetChanged();
             }
@@ -355,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 int menuItemId = item.getItemId();
                 if (menuItemId == R.id.delete) {
                     if (selectedBooks != null && selectedBooks.size() > 0) {
-                        itemViews.removeAll(selectedBooks);
                         bulk_delete(selectedBooks);
                         selectedBooks.clear();
                         for (Book book: itemViews) {
@@ -592,10 +593,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //选择标签
             String label_selected = item.getTitle().toString();
             listViewAdapter.delAll();
-            for(Book book:allBook){
-                if(book.getItem_bookshelf().equals(label_selected))
-                    itemViews.add(book);
+
+            display = new boolean[itemViews.size()];
+            for(int index=0;index<itemViews.size();index++){
+                if(itemViews.get(index).getItem_bookshelf().equals(label_selected))
+                    display[index] = true;
             }
+            listViewAdapter.change(display);
             listViewAdapter.notifyDataSetChanged();
 
         }
@@ -767,8 +771,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
-        allBook.addAll(collection_book.read(getBaseContext()));
-        itemViews.addAll(allBook);
+        itemViews.addAll(collection_book.read(getBaseContext()));
 
         //添加标签
         labels.addAll(collection_Label.read(getBaseContext()));
@@ -792,7 +795,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return itemViews;
     }
 
-    private void deleteBook(int book_id){
+    /*private void deleteBook(int book_id){
         for(int index=0;index<allBook.size();index++){
             if(book_id==allBook.get(index).getId()){
                 allBook.remove(index);
@@ -800,7 +803,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
         }
-    }
+    }*/
 
     private void bulk_delete(List<Book> selectedBooks){
         /*for(int id_index=0;id_index<book_id.length;id_index++){
@@ -811,8 +814,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }*/
-        allBook.removeAll(selectedBooks);
-        collection_book.save(MainActivity.this.getBaseContext(),allBook);
+        itemViews.removeAll(selectedBooks);
+        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
     }
 
     private void destroyDeleteCheckBox() {
@@ -849,7 +852,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             spinner_list.add(shelfs.get(index).getShelf());
         }
 
-        final Intent intent = getIntent();
+/*        final Intent intent = getIntent();
         int sid = intent.getIntExtra("sid",-1);
         int book_index = intent.getIntExtra("index",-1);
         Book book = itemViews.get(book_index);
@@ -869,7 +872,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
         }
-        collection_book.save(getBaseContext(),allBook);
+        collection_book.save(getBaseContext(),allBook);*/
 
         listViewAdapter.notifyDataSetChanged();
     }

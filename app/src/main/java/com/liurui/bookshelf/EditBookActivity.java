@@ -104,7 +104,13 @@ public class EditBookActivity extends Activity {
             spinner_list.add(shelfs.get(index).getShelf());
         bookshelf.setAdapter(spinner_adapter);
         spinner_list.add("添加新书架");
-
+        for(int shelfindex=0;shelfindex<spinner_list.size();shelfindex++){
+            if(MainActivity.itemViews.get(index).getItem_bookshelf().equals(spinner_list.get(shelfindex))) {
+                nowIndex = shelfindex;
+                bookshelf.setSelection(nowIndex,true);
+                break;
+            }
+        }
 
         //其他
         notes.setText(MainActivity.itemViews.get(index).getItem_notes());
@@ -241,8 +247,11 @@ public class EditBookActivity extends Activity {
                             });
                     builder.show();
                 }
-                else
+                else{
                     nowIndex = bookshelf.getSelectedItemPosition();
+                    MainActivity.itemViews.get(index).setItem_bookshelf((String)bookshelf.getItemAtPosition(nowIndex));
+                }
+
             }
 
             @Override

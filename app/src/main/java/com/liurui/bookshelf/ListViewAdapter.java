@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -26,12 +28,20 @@ public class ListViewAdapter extends BaseAdapter {
     private ArrayList<Book> itemViews;
     Context context;
     private OnShowItemClickListener onShowItemClickListener;
+    boolean[] display;
+
 
     public ListViewAdapter(Context context,ArrayList<Book> itemViews){
         this.context = context;
         this.itemViews = itemViews;
+        display = new boolean[itemViews.size()];
+        for(int index=0;index<display.length;index++)
+            display[index] = true;
     }
 
+    public void change(boolean[] display){
+        this.display = display.clone();
+    }
     public void delAll(){
         itemViews.clear();
     }
@@ -54,6 +64,14 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent ) {
+        boolean[] display = new boolean[itemViews.size()];
+        for(int i=0;i<itemViews.size();i++){
+            if(i<this.display.length)
+                display[i] = this.display[i];
+            else
+                display[i] = true;
+        }
+
         final Book book = itemViews.get(position);
         ViewHolder viewHolder = null;
         if (convertView == null) {
@@ -91,6 +109,16 @@ public class ListViewAdapter extends BaseAdapter {
         });
 
         viewHolder.checkBox.setChecked(book.isChecked());
+
+        if(display[position]) {
+            convertView.setVisibility(View.VISIBLE);
+        }
+        else{
+            convertView.setVisibility(View.INVISIBLE);
+//            AbsListView.LayoutParams param = new AbsListView.LayoutParams(0,0);
+//            convertView.setLayoutParams(param);
+        }
+
 
         return convertView;
     }
