@@ -2,6 +2,8 @@ package com.liurui.bookshelf;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -40,6 +42,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -212,7 +215,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setDelete();
     }
-
+    public static byte[] getBytes(Bitmap bitmap){
+        //实例化字节数组输出流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
+        return baos.toByteArray();//创建分配字节数组
+    }
     private void initData(final String ISBN) {
 
         new Thread(new Runnable() {

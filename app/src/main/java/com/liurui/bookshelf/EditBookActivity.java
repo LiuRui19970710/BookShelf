@@ -96,9 +96,7 @@ public class EditBookActivity extends Activity {
         //year.setText(MainActivity.itemViews.get(index).getYear());
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         readstatue.setSelection(MainActivity.itemViews.get(index).getReading_status());
-        if(MainActivity.itemViews.get(index).getBitmap()!=null){
-            imageView.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
-        }
+
         //书架内容
         shelfs = collection_Shelf.read(EditBookActivity.this);
         for (int index = 0; index < shelfs.size(); index++)
@@ -267,7 +265,7 @@ public class EditBookActivity extends Activity {
                             MainActivity.itemViews.get(index).setIsbn(isbn.getText().toString());
                             MainActivity.itemViews.get(index).setReading_status(readstatue.getSelectedItemPosition());
                             //保存书架未保存
-                            MainActivity.itemViews.get(index).setBitmap(((BitmapDrawable)imageView.getDrawable()).getBitmap());
+                            MainActivity.itemViews.get(index).setBitmap(getBytes(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
                             MainActivity.itemViews.get(index).setItem_notes(notes.getText().toString());
                             MainActivity.itemViews.get(index).setItem_labels(label.getText().toString());
                             MainActivity.itemViews.get(index).setItem_website(weburl.getText().toString());
@@ -280,7 +278,12 @@ public class EditBookActivity extends Activity {
             }
         });
     }
-
+    public static byte[] getBytes(Bitmap bitmap){
+        //实例化字节数组输出流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
+        return baos.toByteArray();//创建分配字节数组
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == NONE)
