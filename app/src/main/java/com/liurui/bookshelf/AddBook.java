@@ -36,6 +36,7 @@ public class AddBook {
         book.setPublishing_house(Publisher);
         book.setPublishing_time(Time);
         book.setBitmap(getBytes(bitmap));
+        book.setItem_bookshelf("默认书架");
         return book;
     }
 

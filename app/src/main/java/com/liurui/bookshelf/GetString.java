@@ -48,12 +48,12 @@ public class GetString {
             Publisher=buffer.toString().substring(13,buffer.toString().length()-10);
         }
 
-        Pattern PatternTime = Pattern.compile("\"pubdate\":(.*)\"paper\"");
+        Pattern PatternTime = Pattern.compile("(\\d{4}-\\d{1,2})");
         matcher = PatternTime.matcher(information);
         buffer = new StringBuffer();
         while (matcher.find()) {
             buffer.append(matcher.group());
-            PubTime=buffer.toString().substring(11,buffer.toString().length()-9);
+            PubTime=buffer.toString();
         }
 
         Pattern PatternImg = Pattern.compile("\"img\":(.*)\"gist\"");
