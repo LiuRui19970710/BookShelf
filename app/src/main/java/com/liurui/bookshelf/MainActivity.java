@@ -209,10 +209,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner = super.findViewById(R.id.spinner);
         spinner.setAdapter(spinner_adapter);
         spinner.setOnItemSelectedListener(new MySpinnerItemSelectedListener());
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String shlef_selected = (String)spinner.getItemAtPosition(position);
+                if(shlef_selected.equals("所有")){
+                    listViewAdapter.delAll();
+                    itemViews.addAll(allBook);
+                }
+                else{
+                    listViewAdapter.delAll();
+                    for(Book book:allBook){
+                        if(book.getItem_bookshelf().equals(shlef_selected))
+                            itemViews.add(book);
+                    }
+                }
+                listViewAdapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         //设置左侧列表
         Set_Left_Menu();
-
         setDelete();
     }
     public static byte[] getBytes(Bitmap bitmap){
@@ -565,6 +586,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return true;
                 }
             });
+            //选择标签
+            String label_selected = item.getTitle().toString();
+            listViewAdapter.delAll();
+            for(Book book:allBook){
+                if(book.getItem_bookshelf().equals(label_selected))
+                    itemViews.add(book);
+            }
+            listViewAdapter.notifyDataSetChanged();
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -731,15 +761,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        book.setPublishing_time("testtime");
 //        itemViews.add(book);
 
-        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
+//        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
-        allBook = collection_book.read(getBaseContext());
+        allBook.addAll(collection_book.read(getBaseContext()));
         itemViews.addAll(allBook);
 
         //添加标签
-        ArrayList<Label> tmpLabels = collection_Label.read(getBaseContext());
-        labels.addAll(tmpLabels);
+        labels.addAll(collection_Label.read(getBaseContext()));
 
         //添加书架
         /*Shelf s = new Shelf();
@@ -748,8 +777,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         collection_Shelf.save(MainActivity.this.getBaseContext(),shelfs);*/
 
         spinner_list.add("所有");
-        ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
-        shelfs.addAll(tmpShelf);
+        spinner_list.add("默认书架");
+        shelfs.addAll(collection_Shelf.read(getBaseContext()));
         for(int index=0;index<shelfs.size();index++){
             spinner_list.add(shelfs.get(index).getShelf());
         }
@@ -807,14 +836,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onRestart() {
         super.onRestart();
-        listViewAdapter.notifyDataSetChanged();
+
         spinner_list.clear();
         shelfs.clear();
         spinner_list.add("所有");
-        ArrayList<Shelf> tmpShelf = collection_Shelf.read(getBaseContext());
-        shelfs.addAll(tmpShelf);
+        spinner_list.add("默认书架");
+        shelfs.addAll(collection_Shelf.read(getBaseContext()));
         for(int index=0;index<shelfs.size();index++){
             spinner_list.add(shelfs.get(index).getShelf());
         }
+
+        final Intent intent = getIntent();
+        int sid = intent.getIntExtra("sid",-1);
+        int book_index = intent.getIntExtra("index",-1);
+        Book book = itemViews.get(book_index);
+        for(Book book_edit:allBook){
+            if(book.getId()==sid){
+                book_edit.setName(book.getName());
+                book_edit.setAuthor(book.getAuthor());
+                book_edit.setPublishing_house(book.getPublishing_house());
+                book_edit.setPublishing_time(book.getPublishing_time());
+                book_edit.setIsbn(book.getIsbn());
+                book_edit.setReading_status(book.getReading_status());
+                book_edit.setItem_bookshelf(book.getItem_bookshelf());
+                book_edit.setItem_notes(book.getItem_notes());
+                book_edit.setItem_labels(book.getItem_labels());
+                book_edit.setItem_website(book.getItem_website());
+                book_edit.setBitmap(Book.getBytes(book.getBitmap()));
+                break;
+            }
+        }
+        collection_book.save(getBaseContext(),allBook);
+
+        listViewAdapter.notifyDataSetChanged();
     }
 }

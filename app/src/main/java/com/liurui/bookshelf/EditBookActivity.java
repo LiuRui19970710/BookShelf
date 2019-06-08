@@ -98,6 +98,7 @@ public class EditBookActivity extends Activity {
         readstatue.setSelection(MainActivity.itemViews.get(index).getReading_status());
 
         //书架内容
+        spinner_list.add("默认书架");
         shelfs = collection_Shelf.read(EditBookActivity.this);
         for (int index = 0; index < shelfs.size(); index++)
             spinner_list.add(shelfs.get(index).getShelf());
@@ -275,6 +276,8 @@ public class EditBookActivity extends Activity {
                             MainActivity.itemViews.get(index).setItem_website(weburl.getText().toString());
                             Intent intent1 = new Intent();
                             intent1.setClass(EditBookActivity.this, MainActivity.class);
+                            intent1.putExtra("sid",MainActivity.itemViews.get(index).getId());
+                            intent1.putExtra("index",index);
                             startActivity(intent1);
                             break;
                     }
