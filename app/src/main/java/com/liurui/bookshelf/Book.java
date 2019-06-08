@@ -18,7 +18,7 @@ public class Book implements Serializable {
     private String item_labels;
     private String item_website;
     private Bitmap bitmap;
-    private byte[] data;
+    private byte[] data = new byte[0];
 
     private boolean isShow = false;
     private boolean isChecked = false;
