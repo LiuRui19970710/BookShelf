@@ -8,13 +8,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class LeftListItem {
-    public ArrayList<Book> LeftListSearch(ArrayList<Book> all_bookL_ist, String searchStr){
-        Book temp;
-        ArrayList<Book> res_List = new ArrayList<>();
+    public boolean[] LeftListSearch(ArrayList<Book> all_bookL_ist, String searchStr){
+        boolean[] res_List = new boolean[all_bookL_ist.size()];
+
         for(int i=0;i<all_bookL_ist.size();i++){
-            temp = all_bookL_ist.get(i);
-            if(temp.getName().contains(searchStr))
-                res_List.add(temp);
+            if(all_bookL_ist.get(i).getName().contains(searchStr))
+                res_List[i] = true;
+            else
+                res_List[i] = false;
         }
         return res_List;
     }

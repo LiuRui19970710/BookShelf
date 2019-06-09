@@ -592,7 +592,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             //选择标签
             String label_selected = item.getTitle().toString();
-            listViewAdapter.delAll();
 
             display = new boolean[itemViews.size()];
             for(int index=0;index<itemViews.size();index++){
@@ -692,11 +691,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public boolean onQueryTextSubmit(String query) {
             LeftListItem leftListItem = new LeftListItem();
-            ArrayList sendList = new ArrayList();
-            sendList.addAll(itemViews);
-            ArrayList tmpList = leftListItem.LeftListSearch(sendList,query);
-            listViewAdapter.delAll();
-            itemViews.addAll(tmpList);
+
+            display = leftListItem.LeftListSearch(itemViews,query);
+            listViewAdapter.change(display);
             listViewAdapter.notifyDataSetChanged();
             return false;
         }

@@ -42,9 +42,9 @@ public class ListViewAdapter extends BaseAdapter {
     public void change(boolean[] display){
         this.display = display.clone();
     }
-    public void delAll(){
-        itemViews.clear();
-    }
+//    public void delAll(){
+//        itemViews.clear();
+//    }
     public int getCount() {
         return itemViews.size();
     }
@@ -76,7 +76,7 @@ public class ListViewAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.book_list, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.book_list, parent,false);
             viewHolder.BookCover = (ImageView) convertView.findViewById(R.id.BookCover);
             viewHolder.BookName = (TextView) convertView.findViewById(R.id.BookName);
             viewHolder.BookAuthorAndPublishingHouse = (TextView) convertView.findViewById(R.id.BookAuthor);
@@ -111,12 +111,15 @@ public class ListViewAdapter extends BaseAdapter {
         viewHolder.checkBox.setChecked(book.isChecked());
 
         if(display[position]) {
+            convertView.setLayoutParams(parent.getLayoutParams());
             convertView.setVisibility(View.VISIBLE);
         }
         else{
+            ViewGroup.LayoutParams param = convertView.getLayoutParams();
+            param.height = 1;
+            convertView.setLayoutParams(param);
             convertView.setVisibility(View.INVISIBLE);
-//            AbsListView.LayoutParams param = new AbsListView.LayoutParams(0,0);
-//            convertView.setLayoutParams(param);
+ //           (ViewHolder)convertView.getTag()
         }
 
 
