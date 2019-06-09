@@ -93,7 +93,12 @@ public class ListViewAdapter extends BaseAdapter {
 
         viewHolder.BookCover.setImageBitmap(book.getBitmap());
         viewHolder.BookName.setText(book.getName());
-        viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house()+"    "+book.getPublishing_time());
+        if(!book.getAuthor().equals("")&&!book.getPublishing_house().equals(""))
+            viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + "," + book.getPublishing_house()+"    "+book.getPublishing_time());
+        else if(book.getAuthor().equals("")&&book.getPublishing_house().equals(""))
+            viewHolder.BookAuthorAndPublishingHouse.setText(book.getPublishing_time());
+        else
+            viewHolder.BookAuthorAndPublishingHouse.setText(book.getAuthor() + book.getPublishing_house()+"    "+book.getPublishing_time());
 
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -51,7 +51,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListViewAdapter.OnShowItemClickListener {
-    public static ArrayList<Book> itemViews = new ArrayList<>();
+    public final static ArrayList<Book> itemViews = new ArrayList<>();
     private ArrayList<Label> labels = new ArrayList<>();
     private ArrayList<Shelf> shelfs = new ArrayList<>();
     int label_id=0;
@@ -784,6 +784,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        collection_book.save(MainActivity.this.getBaseContext(),itemViews);
 
         //添加书本
+        itemViews.clear();
         itemViews.addAll(collection_book.read(getBaseContext()));
 
         //添加标签
@@ -865,27 +866,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             spinner_list.add(shelfs.get(index).getShelf());
         }
 
-/*        final Intent intent = getIntent();
-        int sid = intent.getIntExtra("sid",-1);
-        int book_index = intent.getIntExtra("index",-1);
-        Book book = itemViews.get(book_index);
-        for(Book book_edit:allBook){
-            if(book.getId()==sid){
-                book_edit.setName(book.getName());
-                book_edit.setAuthor(book.getAuthor());
-                book_edit.setPublishing_house(book.getPublishing_house());
-                book_edit.setPublishing_time(book.getPublishing_time());
-                book_edit.setIsbn(book.getIsbn());
-                book_edit.setReading_status(book.getReading_status());
-                book_edit.setItem_bookshelf(book.getItem_bookshelf());
-                book_edit.setItem_notes(book.getItem_notes());
-                book_edit.setItem_labels(book.getItem_labels());
-                book_edit.setItem_website(book.getItem_website());
-                book_edit.setBitmap(Book.getBytes(book.getBitmap()));
-                break;
+        for(int index=0;index<itemViews.size();index++){
+            if(itemViews.get(index).getName().equals("")||itemViews.get(index).getName()==null){
+                itemViews.remove(index);
             }
         }
-        collection_book.save(getBaseContext(),allBook);*/
+        collection_book.save(getBaseContext(),itemViews);
 
         listViewAdapter.notifyDataSetChanged();
     }

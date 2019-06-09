@@ -134,6 +134,14 @@ public class EditBookActivity extends Activity {
                     labelarray[i]=labels.get(i).getLabel();
                 }
                 final boolean[] isChecked = new boolean[labelarray.length];
+                for(int x=0;x<MainActivity.itemViews.get(index).getItem_labels().size();x++){
+                    for(int y=0;y<labels.size();y++){
+                        if(MainActivity.itemViews.get(index).getItem_labels().get(x).equals(labels.get(y).getLabel()))
+                            isChecked[x] = true;
+                        break;
+                    }
+                }
+
                 dialog.setMultiChoiceItems(labelarray, isChecked, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
