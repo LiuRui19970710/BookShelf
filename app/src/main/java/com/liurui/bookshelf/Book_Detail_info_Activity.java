@@ -51,7 +51,12 @@ public class Book_Detail_info_Activity extends Activity {
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[MainActivity.itemViews.get(index).getReading_status()]);
         item_website.setText(MainActivity.itemViews.get(index).getItem_website());
-        item_labels.setText(MainActivity.itemViews.get(index).getItem_labels());
+        String txt = "";
+        for(int i=0;i<MainActivity.itemViews.get(index).getItem_labels().size();i++)
+        {
+            txt+=(MainActivity.itemViews.get(index).getItem_labels().get(i)+"  ");
+        }
+        item_labels.setText(txt);
         item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
         item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         picture.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
@@ -84,7 +89,12 @@ public class Book_Detail_info_Activity extends Activity {
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[MainActivity.itemViews.get(index).getReading_status()]);
         item_website.setText(MainActivity.itemViews.get(index).getItem_website());
-        item_labels.setText(MainActivity.itemViews.get(index).getItem_labels());
+        String txt = "";
+        for(int i=0;i<MainActivity.itemViews.get(index).getItem_labels().size();i++)
+        {
+            txt+=(MainActivity.itemViews.get(index).getItem_labels().get(i)+"  ");
+        }
+        item_labels.setText(txt);
         item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
         item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
     }

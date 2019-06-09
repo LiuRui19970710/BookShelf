@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Book implements Serializable {
     private int id;
@@ -16,7 +18,7 @@ public class Book implements Serializable {
     private int reading_status;
     private String item_bookshelf;
     private String item_notes;
-    private String item_labels;
+    private ArrayList<String> item_labels = new ArrayList<String>();
     private String item_website;
     private Bitmap bitmap;
     private byte[] data = new byte[0];
@@ -71,12 +73,12 @@ public class Book implements Serializable {
         this.item_bookshelf = item_bookshelf;
     }
 
-    public String getItem_labels() {
+    public List<String> getItem_labels() {
         return item_labels;
     }
 
     public void setItem_labels(String item_labels) {
-        this.item_labels = item_labels;
+        this.item_labels.add(item_labels);
     }
 
     public String getItem_notes() {

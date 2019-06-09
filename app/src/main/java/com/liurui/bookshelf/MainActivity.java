@@ -3,6 +3,7 @@ package com.liurui.bookshelf;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         if(which==2){
                             {
+                                Bitmap bmp= BitmapFactory.decodeResource(getResources(), R.mipmap.book);
                                 manual_addition.setId(0);
                                 manual_addition.setIsbn("");
                                 manual_addition.setPublishing_time("");
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 manual_addition.setItem_labels("");
                                 manual_addition.setItem_notes("");
                                 manual_addition.setItem_website("");
+                                manual_addition.setBitmap(getBytes(bmp));
                             }
                             itemViews.add(manual_addition);
                             bundle.putSerializable("manual_add_boook",manual_addition);
@@ -466,6 +469,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == 0) {
             // Handle the camera action
             Return_Main();
+            for(int i=0;i<itemViews.size();i++) {
+                display[i] = true;
+            }
+            listViewAdapter.change(display);
+            listViewAdapter.notifyDataSetChanged();
         } else if (id == 1) {
             searchView.setIconified(false);
             searchView.setOnQueryTextListener(new MyQueryTextListener());
@@ -595,8 +603,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.i("fuck", "onNavigationItemSelected: "+label_selected);
             display = new boolean[itemViews.size()];
             for(int index=0;index<itemViews.size();index++){
-                if(itemViews.get(index).getItem_labels().equals(label_selected))
-                    display[index] = true;
+                for(int i=0;i<itemViews.get(index).getItem_labels().size();i++) {
+                    Log.i("fuck", "onNavigationItemSelected: "+itemViews.get(index).getItem_labels().get(i)+i+"  "+index);
+                    if (itemViews.get(index).getItem_labels().get(i).equals(label_selected))
+                        display[index] = true;
+                }
             }
             listViewAdapter.change(display);
             listViewAdapter.notifyDataSetChanged();

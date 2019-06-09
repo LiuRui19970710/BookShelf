@@ -59,7 +59,7 @@ public class EditBookActivity extends Activity {
     private ArrayList<Label> labels;
     private Button button_save;
     private String sign;
-
+    private ArrayList<String> temp_labels= new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +88,7 @@ public class EditBookActivity extends Activity {
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
 
         //设置内容
-        //imageView.setImageResource(MainActivity.itemViews.get(index).getPictureid());
+        imageView.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
         bookname.setText(MainActivity.itemViews.get(index).getName());
         author.setText(MainActivity.itemViews.get(index).getAuthor());
         publish.setText(MainActivity.itemViews.get(index).getPublishing_house());
@@ -115,7 +115,7 @@ public class EditBookActivity extends Activity {
         //其他
         notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         weburl.setText(MainActivity.itemViews.get(index).getItem_website());
-        label.setText(MainActivity.itemViews.get(index).getItem_labels());
+        //label.setText(MainActivity.itemViews.get(index).getItem_labels());
 
         //解决拍照的问题
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -148,6 +148,7 @@ public class EditBookActivity extends Activity {
                         for (int x = 0 ;x<isChecked.length;x++){
                             if(isChecked[x]){
                                 temp.append(labels.get(x).getLabel()+",");
+                                temp_labels.add(labels.get(x).getLabel());
                             }
                         }
                         temp.deleteCharAt(temp.length()-1);
@@ -281,7 +282,9 @@ public class EditBookActivity extends Activity {
                             //保存书架未保存
                             MainActivity.itemViews.get(index).setBitmap(getBytes(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
                             MainActivity.itemViews.get(index).setItem_notes(notes.getText().toString());
-                            MainActivity.itemViews.get(index).setItem_labels(label.getText().toString());
+                            for(int i=0;i<temp_labels.size();i++) {
+                                MainActivity.itemViews.get(index).setItem_labels(temp_labels.get(i));
+                            }
                             MainActivity.itemViews.get(index).setItem_website(weburl.getText().toString());
                             Intent intent1 = new Intent();
                             intent1.setClass(EditBookActivity.this, MainActivity.class);
