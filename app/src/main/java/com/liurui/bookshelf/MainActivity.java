@@ -591,11 +591,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
             //选择标签
-            String label_selected = item.getTitle().toString();
-
+            String label_selected = labels.get(id-6).getLabel();
+            Log.i("fuck", "onNavigationItemSelected: "+label_selected);
             display = new boolean[itemViews.size()];
             for(int index=0;index<itemViews.size();index++){
-                if(itemViews.get(index).getItem_bookshelf().equals(label_selected))
+                if(itemViews.get(index).getItem_labels().equals(label_selected))
                     display[index] = true;
             }
             listViewAdapter.change(display);
