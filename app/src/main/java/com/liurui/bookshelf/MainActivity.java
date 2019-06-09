@@ -418,6 +418,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                for(int i=0;i<itemViews.size();i++) {
+                    display[i] = true;
+                }
+                listViewAdapter.change(display);
+                listViewAdapter.notifyDataSetChanged();
                 return false;
             }
         });
