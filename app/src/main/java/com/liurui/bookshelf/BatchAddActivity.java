@@ -12,7 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class BatchAddActivity extends AppCompatActivity {
     public static TabLayout tabLayout;
     private ViewPager viewPager;
     FragmentPagerAdapter adapter;
-
+    private Toolbar toolbar;
     public static List<Book> mBooks;// books added
 
     @Override
@@ -31,6 +33,9 @@ public class BatchAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batch_add);
         mBooks = new ArrayList<>();
+        toolbar = findViewById(R.id.batchadd_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
 //                != PackageManager.PERMISSION_GRANTED) {
@@ -75,5 +80,22 @@ public class BatchAddActivity extends AppCompatActivity {
         public int getCount() {
             return titles.length;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.batchadd_save, menu);
+        return true;
+    }
+
+    //Toolbar的事件---返回
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }else if (item.getItemId() == R.id.save){
+            //进行相关保存操作
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

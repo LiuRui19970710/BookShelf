@@ -5,13 +5,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/batchadd_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:tooltipText="批量添加">
+    </android.support.v7.widget.Toolbar>
     <android.support.design.widget.TabLayout
         android:id="@+id/tab"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         app:tabGravity="fill"
-        app:tabMode="fixed" />
+        app:tabMode="fixed"
+        android:layout_below="@+id/batchadd_toolbar"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

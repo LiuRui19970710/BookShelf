@@ -19,7 +19,7 @@ public class Book implements Serializable {
     private String item_bookshelf;
     private String item_notes;
     private ArrayList<String> item_labels = new ArrayList<String>();
-    private String item_website;
+    private String item_website="https://service-osj3eufj-1255468759.ap-shanghai.apigateway.myqcloud.com/release/isbn";
     private Bitmap bitmap;
     private byte[] data = new byte[0];
 

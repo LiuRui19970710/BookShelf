@@ -51,6 +51,7 @@ public class Book_Detail_info_Activity extends Activity {
         isbn.setText(MainActivity.itemViews.get(index).getIsbn());
         reading_status.setText(this.getResources().getStringArray(R.array.readstatue)[MainActivity.itemViews.get(index).getReading_status()]);
         item_website.setText(MainActivity.itemViews.get(index).getItem_website());
+
         String txt = "";
         for(int i=0;i<MainActivity.itemViews.get(index).getItem_labels().size();i++)
         {

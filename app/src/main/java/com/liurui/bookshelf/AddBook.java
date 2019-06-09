@@ -23,7 +23,7 @@ public class AddBook {
             sid = tmp_sid.get(0);
     }
 
-    public Book add_book(String name, String Author, String Publisher, String Time, Bitmap bitmap) {
+    public Book add_book(String name, String Author, String Publisher, String Time, Bitmap bitmap,String isbn) {
         Book book = new Book();
         book.setId(sid++);
         ArrayList<Integer> list_sid = new ArrayList<>();
@@ -37,6 +37,7 @@ public class AddBook {
         book.setPublishing_time(Time);
         book.setBitmap(getBytes(bitmap));
         book.setItem_bookshelf("默认书架");
+        book.setIsbn(isbn);
         return book;
     }
 

@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         DownLoadImg downLoadImg = new DownLoadImg();
 
                         itemViews.add(addBook.add_book(getString.getName(), getString.getAuthor(), getString.getPublisher(),
-                                getString.getPubTime(), downLoadImg.DownloadImg(getString.getImgPath())));
+                                getString.getPubTime(), downLoadImg.DownloadImg(getString.getImgPath()),getString.getISBN()));
                         collection_book.save(MainActivity.this.getBaseContext(), itemViews);
                         Runnable runnable = new Runnable() {
                             @Override
