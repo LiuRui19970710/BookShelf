@@ -42,6 +42,10 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //浮窗绑定
@@ -873,6 +878,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         collection_book.save(getBaseContext(),itemViews);
 
+        listViewAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent1(ArrayList<Book> scannerbooks){
+        itemViews.add(scannerbooks.get(0));
         listViewAdapter.notifyDataSetChanged();
     }
 }

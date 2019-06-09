@@ -66,6 +66,8 @@ public class Book implements Serializable {
     }
 
     public String getItem_bookshelf() {
+        if (item_bookshelf==null)
+            item_bookshelf="";
         return item_bookshelf;
     }
 

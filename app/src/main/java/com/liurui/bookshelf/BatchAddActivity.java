@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +97,7 @@ public class BatchAddActivity extends AppCompatActivity {
             finish();
         }else if (item.getItemId() == R.id.save){
             //进行相关保存操作
+            EventBus.getDefault().post(1);
         }
         return super.onOptionsItemSelected(item);
     }

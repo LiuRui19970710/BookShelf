@@ -3,6 +3,7 @@ package com.liurui.bookshelf;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -69,6 +70,17 @@ public class BatchListFragment extends Fragment {
         scannerbooks.add(book);
         Toast.makeText(getContext(),book.getName(),Toast.LENGTH_SHORT).show();
         myAdapter.notifyDataSetChanged();
+        EventBus.getDefault().removeStickyEvent(book);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent1(Integer id){
+        if (id == 1) {
+            EventBus.getDefault().post(scannerbooks);
+            Intent intent = new Intent();
+            intent.setClass(getContext(),MainActivity.class);
+            startActivity(intent);
+        }
+
     }
     @Override
     public void onDestroy() {

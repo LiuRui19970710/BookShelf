@@ -159,7 +159,9 @@ public class EditBookActivity extends Activity {
                                 temp_labels.add(labels.get(x).getLabel());
                             }
                         }
-                        temp.deleteCharAt(temp.length()-1);
+                        if(temp.length()!=0) {
+                            temp.deleteCharAt(temp.length() - 1);
+                        }
                         label.setText(temp.toString());
                     }
                 }).show();
