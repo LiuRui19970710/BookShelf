@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 
 public class Book_Detail_info_Activity extends SlidingActivity {
-    private TextView book_name, author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website;
+    private TextView author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website;
     private android.widget.ImageView picture;
     private int index;
     private ArrayList<Label> labels;
     private Book book;
-    private Button edit;
+    //private Button edit;
 
 
     @Override
@@ -30,21 +30,26 @@ public class Book_Detail_info_Activity extends SlidingActivity {
                 getResources().getColor(R.color.colorPrimaryDark)
         );
         setContent(R.layout.book_info);
+        setHeaderContent(R.layout.book_info_header);
         setFab(
                 getResources().getColor(R.color.colorAccent),
                 R.drawable.bookcover,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent1 = new Intent(Book_Detail_info_Activity.this,MainActivity.class);
-                        intent1.putExtra("book_object", "111");
+                        Intent intent1=new Intent();
+                        intent1.setClass(Book_Detail_info_Activity.this,EditBookActivity.class);
+                        Bundle bundle =new Bundle();
+                        bundle.putSerializable("label",labels);
+                        intent1.putExtra("index",index);
+                        intent1.putExtras(bundle);
+                        intent1.putExtra("method_start","detail");
                         startActivity(intent1);
-                        finish();
                     }
                 }
         );
         //绑定组件
-        book_name = (TextView) findViewById(R.id.book_name);
+//        book_name = (TextView) findViewById(R.id.book_name);
         author_name = (TextView) findViewById(R.id.book_info_item_author_name);
         publisher = (TextView) findViewById(R.id.book_info_item_publisher_name);
         data = (TextView) findViewById(R.id.book_info_item_date_number);
@@ -55,14 +60,15 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         item_labels = (TextView) findViewById(R.id.book_detail_item_labels_text);
         item_website = (TextView) findViewById(R.id.book_detail_item_website_text);
         picture = (ImageView)findViewById(R.id.picture);
-        edit = (Button)findViewById(R.id.edit);
+    //    edit = (Button)findViewById(R.id.edit);
 
         //刷新数据
         final Intent intent = getIntent();
         index = intent.getIntExtra("index", 0);
         labels = (ArrayList<Label>) intent.getSerializableExtra("label");
         book = (Book) intent.getSerializableExtra("book");
-        book_name.setText(MainActivity.itemViews.get(index).getName());
+        setTitle(MainActivity.itemViews.get(index).getName());
+//        book_name.setText(MainActivity.itemViews.get(index).getName());
         author_name.setText(MainActivity.itemViews.get(index).getAuthor());
         publisher.setText(MainActivity.itemViews.get(index).getPublishing_house());
         data.setText(MainActivity.itemViews.get(index).getPublishing_time());
@@ -81,7 +87,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         picture.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
 
 
-        edit.setOnClickListener(new View.OnClickListener() {
+     /*   edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1=new Intent();
@@ -93,7 +99,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
                 intent1.putExtra("method_start","detail");
                 startActivity(intent1);
             }
-        });
+        });*/
 
 
     }
@@ -101,7 +107,8 @@ public class Book_Detail_info_Activity extends SlidingActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        book_name.setText(MainActivity.itemViews.get(index).getName());
+        setTitle(MainActivity.itemViews.get(index).getName());
+ //       book_name.setText(MainActivity.itemViews.get(index).getName());
         author_name.setText(MainActivity.itemViews.get(index).getAuthor());
         publisher.setText(MainActivity.itemViews.get(index).getPublishing_house());
         data.setText(MainActivity.itemViews.get(index).getPublishing_time());
