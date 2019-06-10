@@ -126,8 +126,18 @@ public class EditBookActivity extends Activity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
+        //初始化标签文本
+        StringBuilder temp =new StringBuilder();
+        for(int j=0;j<MainActivity.itemViews.get(index).getItem_labels().size();j++){
+            temp.append(labels.get(j).getLabel()+",");
+        }
+        if(temp.length()!=0) {
+            temp.deleteCharAt(temp.length() - 1);
+        }
+        label.setText(temp.toString());
         //标签的点击事件
         label.setInputType(InputType.TYPE_NULL);
+
         label.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +211,6 @@ public class EditBookActivity extends Activity {
                                         tagLabel = false;
                                 }
                                 if(tagLabel){
-                                    temp.append(labels.get(x).getLabel()+",");
                                     temp_labels.add(labels.get(x).getLabel());
                                     MainActivity.itemViews.get(index).setItem_labels(labels.get(x).getLabel());
                                 }
@@ -213,6 +222,8 @@ public class EditBookActivity extends Activity {
                                 }
                             }
                         }
+                        for(int j=0;j<MainActivity.itemViews.get(index).getItem_labels().size();j++)
+                            temp.append(labels.get(j).getLabel()+",");
                         if(temp.length()!=0) {
                             temp.deleteCharAt(temp.length() - 1);
                         }
