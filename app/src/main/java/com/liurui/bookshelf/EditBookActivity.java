@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EditBookActivity extends Activity {
@@ -60,6 +61,8 @@ public class EditBookActivity extends Activity {
     private Button button_save;
     private String sign;
     private ArrayList<String> temp_labels= new ArrayList<>();
+    private List<String> preLabel;
+    Collection collection_label = new Collection("Label");
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +70,9 @@ public class EditBookActivity extends Activity {
         final Intent intent = getIntent();
         index = intent.getIntExtra("index", -1);
         sign = intent.getStringExtra("method_start");
-        labels = (ArrayList<Label>) intent.getSerializableExtra("label");
+//        labels = (ArrayList<Label>) intent.getSerializableExtra("label");
+        labels = collection_label.read(EditBookActivity.this);
+        preLabel = MainActivity.itemViews.get(index).getItem_labels();
         //组件绑定
         imageView = (ImageView) findViewById(R.id.edit_picture);
         bookname = (EditText) findViewById(R.id.edit_bookname);
@@ -127,36 +132,85 @@ public class EditBookActivity extends Activity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(EditBookActivity.this);
+                final EditText inputServer = new EditText(EditBookActivity.this);
                 //获取AlertDialog对象
                 dialog.setTitle("选择标签");//设置标题
-                final String[] labelarray = new String[labels.size()];
+                final String[] labelArray = new String[labels.size()];
                 for (int i = 0;i<labels.size();i++){
-                    labelarray[i]=labels.get(i).getLabel();
+                    labelArray[i]=labels.get(i).getLabel();
                 }
-                final boolean[] isChecked = new boolean[labelarray.length];
-                for(int x=0;x<MainActivity.itemViews.get(index).getItem_labels().size();x++){
-                    for(int y=0;y<labels.size();y++){
-                        if(MainActivity.itemViews.get(index).getItem_labels().get(x).equals(labels.get(y).getLabel()))
-                            isChecked[x] = true;
-                        break;
+                final boolean[] isChecked = new boolean[labelArray.length];
+
+                for(int x=0;x<labelArray.length;x++){
+                    if(MainActivity.itemViews.get(index).getItem_labels().size()>0){
+                        for(int y=0;y<MainActivity.itemViews.get(index).getItem_labels().size();y++){
+                            if(MainActivity.itemViews.get(index).getItem_labels().get(y).equals(labels.get(x).getLabel())){
+                                isChecked[x] = true;
+                                break;
+                            }
+                        }
                     }
                 }
 
-                dialog.setMultiChoiceItems(labelarray, isChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                dialog.setMultiChoiceItems(labelArray, isChecked, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
 
                     }
                 });
                 dialog.setCancelable(true);//设置是否可取消
+                dialog.setNeutralButton("添加标签", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder addLabelBtn = new AlertDialog.Builder(EditBookActivity.this);
+                        addLabelBtn.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        addLabelBtn.setTitle("标签名称").setView(inputServer).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String newLabel = inputServer.getText().toString();
+                                boolean tagLabel = true;
+                                for(int label_index=0;label_index<labelArray.length;label_index++){
+                                    if(labelArray[label_index].equals(newLabel))
+                                        tagLabel = false;
+                                }
+                                if(tagLabel){
+                                    Label labelAdd = new Label();
+                                    labelAdd.setLabel(newLabel);
+                                    labels.add(labelAdd);
+                                    collection_label.save(EditBookActivity.this,labels);
+                                }
+                            }
+                        }).show();
+                    }
+
+                });
                 dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder temp =new StringBuilder();
                         for (int x = 0 ;x<isChecked.length;x++){
                             if(isChecked[x]){
-                                temp.append(labels.get(x).getLabel()+",");
-                                temp_labels.add(labels.get(x).getLabel());
+                                boolean tagLabel = true;
+                                for(int j=0;j<MainActivity.itemViews.get(index).getItem_labels().size();j++){
+                                    if(labels.get(x).getLabel().equals(MainActivity.itemViews.get(index).getItem_labels().get(j)))
+                                        tagLabel = false;
+                                }
+                                if(tagLabel){
+                                    temp.append(labels.get(x).getLabel()+",");
+                                    temp_labels.add(labels.get(x).getLabel());
+                                    MainActivity.itemViews.get(index).setItem_labels(labels.get(x).getLabel());
+                                }
+                            }
+                            else{
+                                for(int j=0;j<MainActivity.itemViews.get(index).getItem_labels().size();j++){
+                                    if(labels.get(x).getLabel().equals(MainActivity.itemViews.get(index).getItem_labels().get(j)))
+                                        MainActivity.itemViews.get(index).getItem_labels().remove(j);
+                                }
                             }
                         }
                         if(temp.length()!=0) {
@@ -194,7 +248,7 @@ public class EditBookActivity extends Activity {
                 dialog.setNegativeButton("相册", new DialogInterface.OnClickListener() {
                     @Override//设置从本地读取图片事件
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent1 = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        Intent intent1 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         intent1.setType("image/*");
                         startActivityForResult(intent1, PHOTO_ZOOM);
                     }
@@ -210,7 +264,7 @@ public class EditBookActivity extends Activity {
                 if(shelf_selected.equals("添加新书架")){
                     final EditText inputServer = new EditText(EditBookActivity.this);
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditBookActivity.this);
-                    builder.setTitle("书架名称").setView(inputServer).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setTitle("书架名称").setView(inputServer).setNeutralButton("取消", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -292,9 +346,9 @@ public class EditBookActivity extends Activity {
                             //保存书架未保存
                             MainActivity.itemViews.get(index).setBitmap(getBytes(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
                             MainActivity.itemViews.get(index).setItem_notes(notes.getText().toString());
-                            for(int i=0;i<temp_labels.size();i++) {
+                            /*for(int i=0;i<temp_labels.size();i++) {
                                 MainActivity.itemViews.get(index).setItem_labels(temp_labels.get(i));
-                            }
+                            }*/
                             MainActivity.itemViews.get(index).setItem_website(weburl.getText().toString());
                             Intent intent1 = new Intent();
                             intent1.setClass(EditBookActivity.this, MainActivity.class);
@@ -423,6 +477,9 @@ public class EditBookActivity extends Activity {
             dialog.setPositiveButton("舍弃", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    MainActivity.itemViews.get(index).getItem_labels().clear();
+                    for(int t=0;t<preLabel.size();t++)
+                        MainActivity.itemViews.get(index).setItem_labels(preLabel.get(t));
                     onBackPressed();
                 }
             });

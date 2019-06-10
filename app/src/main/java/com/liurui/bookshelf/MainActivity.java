@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EventBus.getDefault().register(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //初始化
+        Initialize();
         //浮窗绑定
         FloatingActionButton addone=(FloatingActionButton)findViewById(R.id.button_addone);
         FloatingActionButton addmany=(FloatingActionButton)findViewById(R.id.button_addmany);
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if(which==2){
                             {
                                 Bitmap bmp= BitmapFactory.decodeResource(getResources(), R.mipmap.book);
+       //                         ArrayList<String> labelStr = new ArrayList<String>();
                                 manual_addition.setId(0);
                                 manual_addition.setIsbn("");
                                 manual_addition.setPublishing_time("");
@@ -145,16 +149,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 manual_addition.setAuthor("");
                                 manual_addition.setChecked(false);
                                 manual_addition.setItem_bookshelf("");
-                                manual_addition.setItem_labels("");
+        //                        manual_addition.setItem_labels(labelStr);
                                 manual_addition.setItem_notes("");
                                 manual_addition.setItem_website("");
                                 manual_addition.setBitmap(getBytes(bmp));
                             }
                             itemViews.add(manual_addition);
                             bundle.putSerializable("manual_add_boook",manual_addition);
-                            intent_Edit.putExtras(bundle);
+                            Bundle bundle_edit = new Bundle();
+                            bundle_edit.putSerializable("label",labels);
                             intent_Edit.putExtra("index",itemViews.size()-1);
                             intent_Edit.putExtra("method_start","main");
+                            intent_Edit.putExtras(bundle_edit);
                             startActivityForResult(intent_Edit,REQUEST_CODE_MANUALADDITION);
                         }
                     }
@@ -180,8 +186,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        Initialize();
 
         listView = (ListView)findViewById(R.id.BookList);
         listViewAdapter = new ListViewAdapter(MainActivity.this,itemViews);
