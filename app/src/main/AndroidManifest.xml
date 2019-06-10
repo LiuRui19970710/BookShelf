@@ -31,7 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Book_Detail_info_Activity"></activity>
+        <activity
+            android:name=".Book_Detail_info_Activity"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Sliding.Light"/>
         <activity
             android:name=".About">
         </activity>

@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.klinker.android.sliding.SlidingActivity;
+
 import java.util.ArrayList;
 
 
-public class Book_Detail_info_Activity extends Activity {
+public class Book_Detail_info_Activity extends SlidingActivity {
     private TextView book_name, author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website;
     private android.widget.ImageView picture;
     private int index;
@@ -22,9 +24,25 @@ public class Book_Detail_info_Activity extends Activity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.book_info);
+    public void init( Bundle savedInstanceState) {
+        setPrimaryColors(
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark)
+        );
+        setContent(R.layout.book_info);
+        setFab(
+                getResources().getColor(R.color.colorAccent),
+                R.drawable.bookcover,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent1 = new Intent(Book_Detail_info_Activity.this,MainActivity.class);
+                        intent1.putExtra("book_object", "111");
+                        startActivity(intent1);
+                        finish();
+                    }
+                }
+        );
         //绑定组件
         book_name = (TextView) findViewById(R.id.book_name);
         author_name = (TextView) findViewById(R.id.book_info_item_author_name);
