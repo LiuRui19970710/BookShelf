@@ -33,7 +33,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         setHeaderContent(R.layout.book_info_header);
         setFab(
                 getResources().getColor(R.color.colorAccent),
-                R.drawable.bookcover,
+                R.drawable.pen,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

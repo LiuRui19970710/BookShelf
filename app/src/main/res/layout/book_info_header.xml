@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/del_btn"
+        android:layout_marginTop="3dp"
+        android:layout_gravity="right"
+        android:background="@drawable/delete"/>
+
     <ImageView
         android:id="@+id/picture"
         android:layout_width="132dp"
