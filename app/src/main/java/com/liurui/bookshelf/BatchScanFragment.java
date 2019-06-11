@@ -96,6 +96,7 @@ public class BatchScanFragment extends Fragment {
                         Book book = new Book();
                         book.setBitmap(Book.getBytes(downLoadImg.DownloadImg(getString.getImgPath())));
                         book.setAuthor(getString.getAuthor());
+                        book.setItem_bookshelf("默认书架");
                         book.setIsbn(getString.getISBN());
                         book.setName(getString.getName());
                         book.setPublishing_house(getString.getPublisher());

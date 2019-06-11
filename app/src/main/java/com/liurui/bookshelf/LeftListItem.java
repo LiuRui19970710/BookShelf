@@ -12,7 +12,8 @@ public class LeftListItem {
         boolean[] res_List = new boolean[all_bookL_ist.size()];
 
         for(int i=0;i<all_bookL_ist.size();i++){
-            if(all_bookL_ist.get(i).getName().contains(searchStr)||all_bookL_ist.get(i).getAuthor().equals(searchStr)||all_bookL_ist.get(i).getPublishing_house().equals(searchStr)||all_bookL_ist.get(i).getItem_notes().equals(searchStr))
+//            if(all_bookL_ist.get(i).getName().contains(searchStr)||all_bookL_ist.get(i).getAuthor().equals(searchStr)||all_bookL_ist.get(i).getPublishing_house().equals(searchStr)||all_bookL_ist.get(i).getItem_notes().equals(searchStr))
+            if(all_bookL_ist.get(i).getName().contains(searchStr))
                 res_List[i] = true;
             else
                 res_List[i] = false;

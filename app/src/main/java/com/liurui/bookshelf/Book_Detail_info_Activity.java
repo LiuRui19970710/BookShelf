@@ -1,6 +1,8 @@
 package com.liurui.bookshelf;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
     private int index;
     private ArrayList<Label> labels;
     private Book book;
+    private Button delBtn;
     //private Button edit;
 
 
@@ -60,6 +63,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         item_labels = (TextView) findViewById(R.id.book_detail_item_labels_text);
         item_website = (TextView) findViewById(R.id.book_detail_item_website_text);
         picture = (ImageView)findViewById(R.id.picture);
+        delBtn = (Button)findViewById(R.id.del_btn);
     //    edit = (Button)findViewById(R.id.edit);
 
         //刷新数据
@@ -86,6 +90,26 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         picture.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
 
+
+        delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Book_Detail_info_Activity.this);
+                builder.setTitle("确认删除此书？").setNeutralButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                     /*   MainActivity.itemViews.remove(index);
+                        finish();*/
+                    }
+                });
+                builder.show();
+            }
+        });
 
      /*   edit.setOnClickListener(new View.OnClickListener() {
             @Override

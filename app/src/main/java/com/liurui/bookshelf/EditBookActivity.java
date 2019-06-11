@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -62,6 +63,7 @@ public class EditBookActivity extends Activity {
     private String sign;
     private ArrayList<String> temp_labels= new ArrayList<>();
     private List<String> preLabel;
+    private String preShelf;
     Collection collection_label = new Collection("Label");
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class EditBookActivity extends Activity {
 //        labels = (ArrayList<Label>) intent.getSerializableExtra("label");
         labels = collection_label.read(EditBookActivity.this);
         preLabel = MainActivity.itemViews.get(index).getItem_labels();
+        preShelf = MainActivity.itemViews.get(index).getItem_bookshelf();
         //组件绑定
         imageView = (ImageView) findViewById(R.id.edit_picture);
         bookname = (EditText) findViewById(R.id.edit_bookname);
@@ -269,6 +272,7 @@ public class EditBookActivity extends Activity {
 
         //设置书架的Listener
         bookshelf.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String shelf_selected = (String)bookshelf.getItemAtPosition(position);
@@ -314,13 +318,21 @@ public class EditBookActivity extends Activity {
                                             shelfs.add(newShelf);
                                             collection_Shelf.save(EditBookActivity.this,shelfs);
                                             nowIndex = bookshelf.getSelectedItemPosition();
+                                            MainActivity.itemViews.get(index).setItem_bookshelf((String)bookshelf.getItemAtPosition(nowIndex));
                                         }
                                         else
                                             bookshelf.setSelection(nowIndex,true);
                                     }
 
                                 }
-                            });
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener(){
+                                @Override
+                                public void onDismiss(DialogInterface dialog){
+                                    if(bookshelf.getSelectedItemPosition()==spinner_list.size()-1)
+                                        bookshelf.setSelection(nowIndex,true);
+                                }
+                    });
                     builder.show();
                 }
                 else{
@@ -491,6 +503,7 @@ public class EditBookActivity extends Activity {
                     MainActivity.itemViews.get(index).getItem_labels().clear();
                     for(int t=0;t<preLabel.size();t++)
                         MainActivity.itemViews.get(index).setItem_labels(preLabel.get(t));
+                    MainActivity.itemViews.get(index).setItem_bookshelf(preShelf);
                     onBackPressed();
                 }
             });
