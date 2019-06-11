@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Book implements Serializable {
@@ -20,6 +21,7 @@ public class Book implements Serializable {
     private String item_notes;
     private ArrayList<String> item_labels = new ArrayList<String>();
     private String item_website="https://service-osj3eufj-1255468759.ap-shanghai.apigateway.myqcloud.com/release/isbn";
+    private Date item_date = new Date();
     private Bitmap bitmap;
     private byte[] data = new byte[0];
 
@@ -146,5 +148,13 @@ public class Book implements Serializable {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
         return baos.toByteArray();//创建分配字节数组
+    }
+
+    public Date getItem_date() {
+        return item_date;
+    }
+
+    public void setItem_date(Date item_date) {
+        this.item_date = item_date;
     }
 }

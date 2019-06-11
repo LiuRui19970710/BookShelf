@@ -22,7 +22,7 @@
         android:layout_gravity="center_horizontal"/>
 
     <TextView
-        android:id="@+id/book_info_header_addtime"
+        android:id="@+id/book_info_header_addDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -30,10 +30,10 @@
         android:textSize="20sp"
         android:maxLines="1"
         android:textColor="@android:color/white"
-        android:text="Easter Egg:You add this book at\n" />
+        android:text="彩蛋：您于以下时间添加此书\n" />
 
     <TextView
-        android:id="@+id/book_info_addtime"
+        android:id="@+id/book_info_addDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"

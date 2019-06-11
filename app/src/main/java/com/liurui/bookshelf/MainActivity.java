@@ -890,4 +890,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         itemViews.add(scannerbooks.get(0));
         listViewAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        listViewAdapter.notifyDataSetChanged();
+    }
 }

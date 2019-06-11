@@ -13,11 +13,14 @@ import android.widget.TextView;
 
 import com.klinker.android.sliding.SlidingActivity;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
 public class Book_Detail_info_Activity extends SlidingActivity {
-    private TextView author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website;
+    private TextView author_name, publisher, data, isbn, reading_status, item_bookshelf, item_notes, item_labels, item_website, item_addDate;
     private android.widget.ImageView picture;
     private int index;
     private ArrayList<Label> labels;
@@ -64,6 +67,7 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         item_website = (TextView) findViewById(R.id.book_detail_item_website_text);
         picture = (ImageView)findViewById(R.id.picture);
         delBtn = (Button)findViewById(R.id.del_btn);
+        item_addDate = (TextView)findViewById(R.id.book_info_addDate);
     //    edit = (Button)findViewById(R.id.edit);
 
         //刷新数据
@@ -89,6 +93,10 @@ public class Book_Detail_info_Activity extends SlidingActivity {
         item_bookshelf.setText(MainActivity.itemViews.get(index).getItem_bookshelf());
         item_notes.setText(MainActivity.itemViews.get(index).getItem_notes());
         picture.setImageBitmap(MainActivity.itemViews.get(index).getBitmap());
+        //彩蛋
+        SimpleDateFormat Fmt=new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒 E ");
+        String book_addDate = Fmt.format(MainActivity.itemViews.get(index).getItem_date());
+        item_addDate.setText(book_addDate);
 
 
         delBtn.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +111,8 @@ public class Book_Detail_info_Activity extends SlidingActivity {
                 }).setPositiveButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                     /*   MainActivity.itemViews.remove(index);
-                        finish();*/
+                        MainActivity.itemViews.remove(index);
+                        onBackPressed();
                     }
                 });
                 builder.show();
